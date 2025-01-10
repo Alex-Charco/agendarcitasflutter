@@ -18,5 +18,7 @@ tasks.register("clean", Delete) {
 }
 
 dependencies {
-    classpath 'com.google.gms:google-services:4.3.15' // Usa la versión más reciente
+    classpath 'com.google.gms:google-services:4.3.15'
+    classpath 'com.android.tools.build:gradle:7.0.3'
+
 }
