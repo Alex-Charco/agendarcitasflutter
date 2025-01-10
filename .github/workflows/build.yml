@@ -1,53 +1,33 @@
-name: SonarQube Cloud
-
+name: Build
 on:
   push:
     branches:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
-  build:
-    name: Build and analyze Flutter project
+  sonarqube:
+    name: SonarQube
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/cirruslabs/flutter:stable
-
     steps:
-      # Clonar el repositorio
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Deshabilitar clones superficiales para análisis más relevante
+          fetch-depth: 0
 
-      # Cachear dependencias de SonarCloud
-      - name: Cache SonarQube Cloud packages
-        uses: actions/cache@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          flutter-version: '3.24.5'  # Cambia según la versión específica que necesitas
+          channel: stable
 
-      # Instalar dependencias del proyecto Flutter
       - name: Install dependencies
         run: flutter pub get
-      - run: flutter analyze .
-      # Run widget tests for our flutter project.
-      - run: flutter test
 
-      # Construir el APK para Android
       - name: Build APK
         run: flutter build apk --release
 
-      # Descargar el sonar-scanner
-      - name: Download sonar-scanner
-        run: |
-          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux-x64.zip
-          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-      # Ejecutar el análisis de SonarCloud
-      - name: Build and analyze
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Necesario para obtener la información del PR
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Token de acceso de SonarCloud
-        run: $HOME/.sonar/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner
-
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
