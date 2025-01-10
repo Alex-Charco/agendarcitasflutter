@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.utpl" "\0"
-            VALUE "FileDescription", "agendarcitaflutter" "\0"
+            VALUE "FileDescription", "agendarcitasflutter" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "agendarcitaflutter" "\0"
+            VALUE "InternalName", "agendarcitasflutter" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.utpl. All rights reserved." "\0"
-            VALUE "OriginalFilename", "agendarcitaflutter.exe" "\0"
-            VALUE "ProductName", "agendarcitaflutter" "\0"
+            VALUE "OriginalFilename", "agendarcitasflutter.exe" "\0"
+            VALUE "ProductName", "agendarcitasflutter" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

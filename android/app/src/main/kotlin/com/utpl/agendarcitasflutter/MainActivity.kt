@@ -1,4 +1,4 @@
-package com.utpl.agendarcitaflutter
+package com.utpl.agendarcitasflutter
 
 import io.flutter.embedding.android.FlutterActivity
 
