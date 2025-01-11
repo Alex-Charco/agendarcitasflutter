@@ -1,0 +1,42 @@
+name: Firebase App Distribution
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "beta"
+      - name: Run Flutter
+        run: |
+          flutter pub get
+          flutter analyze      
+          flutter test
+      - run: flutter build apk
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v1.0.${{github.run_number}}
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: upload artifact to Fiebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: Prueba1
+          file: build/app/outputs/apk/release/app-release.apk
