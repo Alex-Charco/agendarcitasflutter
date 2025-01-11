@@ -48,6 +48,6 @@ jobs:
       # Ejecutar el análisis de SonarCloud
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Necesario para obtener la información del PR
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Token de acceso de SonarCloud
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
         run: $HOME/.sonar/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner
