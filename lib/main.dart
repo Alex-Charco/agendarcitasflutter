@@ -1,3 +1,4 @@
+import 'package:agendarcitasflutter/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_core/firebase_core.dart';
 //import 'firebase/firebase_options.dart';
@@ -16,15 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-        ),
-        body: const Center(
-          child: Text('Hello, World!'),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      title: 'Agendamiento de citas médicas',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue)),
+      onGenerateRoute: AppRoutes.onGenerateRoute,
+      initialRoute: AppRoutes.login,
     );
   }
 }
