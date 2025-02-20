@@ -48,7 +48,7 @@ class _LoginViewState extends State<LoginView> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
               borderRadius: BorderRadius.circular(15),
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withOpacity(0.05), // ignore: deprecated_member_use
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
