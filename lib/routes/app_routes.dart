@@ -1,15 +1,16 @@
-import 'package:agendarcitasflutter/views/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:agendarcitasflutter/views/login_view.dart';
 
 class AppRoutes {
   static const String login = '/login';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    switch (settings.name) {
+    final String routeName = settings.name ?? login;
+
+    switch (routeName) {
       case login:
         return MaterialPageRoute(builder: (_) => const LoginView());
       default:
-        // Ruta por defecto para casos no manejados.
         return MaterialPageRoute(builder: (_) => const LoginView());
     }
   }

@@ -18,9 +18,11 @@ class _LoginViewState extends State<LoginView> {
   final idNumber = _idController.text.trim();
   final error = _controller.validateId(idNumber);
 
-  setState(() {
-    _errorMessage = error;
-  });
+  if (mounted) {
+      setState(() {
+        _errorMessage = error;
+      });
+    }
 
   if (error == null) {
     final isLoggedIn = _controller.login(idNumber);

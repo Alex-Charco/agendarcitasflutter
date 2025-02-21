@@ -4,6 +4,9 @@ class UserModel {
   UserModel(this.idNumber);
 
   bool isValidId() {
-    return idNumber.isNotEmpty && idNumber.length >= 10;
+    if (idNumber.isEmpty) return false;
+    if (idNumber.length < 10) return false;
+    if (!RegExp(r'^\d+$').hasMatch(idNumber)) return false; // Verifica que solo contenga números
+    return true;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 //import 'firebase/firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   /*WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -17,11 +18,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      key: const ValueKey('MaterialApp'),
       debugShowCheckedModeBanner: false,
       title: 'Agendamiento de citas médicas',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue)),
+          seedColor: Colors.blue,
+          brightness: Brightness.light, // Se especifica explícitamente
+        ),
+        useMaterial3: true, // Se habilita Material 3 para compatibilidad
+      ),
       onGenerateRoute: AppRoutes.onGenerateRoute,
       initialRoute: AppRoutes.login,
     );

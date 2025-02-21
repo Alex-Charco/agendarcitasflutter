@@ -9,10 +9,15 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Agendamiento de citas médicas'),
       ),
-      body: const Center(
-        child: Text(
-          'Bienvenido a la página principal',
-          style: TextStyle(fontSize: 18),
+      body: SafeArea( // Se agrega SafeArea para evitar problemas en dispositivos con notch
+        child: Center(
+          child: Semantics( // Se agrega Semantics para mejorar accesibilidad
+            label: 'Mensaje de bienvenida',
+            child: const Text(
+              'Bienvenido a la página principal',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
         ),
       ),
     );

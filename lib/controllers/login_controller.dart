@@ -1,24 +1,28 @@
 import '../models/user_model.dart';
 
 class LoginController {
-  // Número de cédula predeterminado para iniciar sesión
   final String _defaultIdNumber = "1234567890";
 
+  // Método para validar el número de cédula
   String? validateId(String idNumber) {
-    final user = UserModel(idNumber);
     if (idNumber.isEmpty) {
       return 'Por favor, ingrese su número de cédula.';
-    } else if (!user.isValidId()) {
-      return 'El número de cédula debe tener al menos 10 dígitos.';
     }
+
+    try {
+      final user = UserModel(idNumber);
+      if (!user.isValidId()) {
+        return 'El número de cédula debe tener al menos 10 dígitos.';
+      }
+    } catch (e) {
+      return 'Hubo un error al procesar el número de cédula.';
+    }
+
     return null; 
   }
 
+  // Método para iniciar sesión
   bool login(String idNumber) {
-    // Comprobar si el número ingresado coincide con el predeterminado
-    if (idNumber == _defaultIdNumber) {
-      return true; 
-    }
-    return false;
+    return idNumber == _defaultIdNumber; 
   }
 }
