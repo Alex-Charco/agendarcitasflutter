@@ -1,4 +1,4 @@
-/*class UserModel {
+class UserModel {
   final String idNumber;
 
   UserModel(this.idNumber);
@@ -10,4 +10,3 @@
     return true;
   }
 }
-*/
