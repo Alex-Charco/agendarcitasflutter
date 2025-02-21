@@ -15,10 +15,10 @@ jobs:
       image: ghcr.io/cirruslabs/flutter:stable
 
     steps:
-      # Clonar repositorio y configurar caché
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
@@ -26,25 +26,31 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # Instalar dependencias y analizar código
       - name: Install dependencies
         run: flutter pub get
+
       - name: Analyze code
         run: flutter analyze .
-      #- run: flutter test
 
-      # Construir el APK
-      - name: Build APK
-        run: flutter build apk --release
+      # 🔹 Ejecutar pruebas y generar reporte de cobertura
+      - name: Run tests with coverage
+        run: flutter test --coverage
 
-        # Descargar y ejecutar SonarScanner
+      # 🔹 Verificar que el archivo `lcov.info` se generó
+      - name: Check coverage file
+        run: ls -lh coverage/lcov.info
+
+      # 🔹 Descargar y ejecutar SonarScanner
       - name: Download sonar-scanner
         run: |
           curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux-x64.zip
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
-      - name: Build and analyze
+      # 🔹 Ejecutar análisis de SonarCloud con cobertura
+      - name: Run SonarScanner
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
-        run: $HOME/.sonar/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          $HOME/.sonar/sonar-scanner-6.2.1.4610-linux-x64/bin/sonar-scanner \
+            -Dsonar.coverageReportPaths=coverage/lcov.info
