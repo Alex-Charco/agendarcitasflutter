@@ -24,12 +24,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
-          brightness: Brightness.light, // Se especifica explícitamente
+          brightness: Brightness.light, 
         ),
-        useMaterial3: true, // Se habilita Material 3 para compatibilidad
+        useMaterial3: true, 
       ),
-      onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: AppRoutes.login,
+      //onGenerateRoute: AppRoutes.onGenerateRoute,
+      //initialRoute: AppRoutes.login,
     );
   }
 }
