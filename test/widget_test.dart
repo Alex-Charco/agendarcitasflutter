@@ -1,30 +1,27 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:agendarcitasflutter/main.dart';
+import 'package:agendarcitasflutter/views/home_view.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  // 📌 Prueba 1: Verifica que la app se carga sin errores
+  testWidgets('Carga la aplicación sin errores', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
+    expect(find.byType(MyApp), findsOneWidget);
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  // 📌 Prueba 2: Verifica que HomeView se renderiza correctamente
+  testWidgets('HomeView muestra el título y mensaje de bienvenida', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeView()));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.text('Agendamiento de citas médicas'), findsOneWidget);
+    expect(find.text('Bienvenido a la página principal'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  // 📌 Prueba 3: Verifica que el Scaffold está presente en HomeView
+  testWidgets('HomeView contiene un Scaffold', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomeView()));
+
+    expect(find.byType(Scaffold), findsOneWidget);
   });
 }
