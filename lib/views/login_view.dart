@@ -1,6 +1,6 @@
 import 'package:agendarcitasflutter/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
-import 'home_view.dart';
+import 'package:agendarcitasflutter/views/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
