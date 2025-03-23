@@ -6,5 +6,7 @@ Crear el proyecto ejecutando el comando:
 
     flutter create --org com.utpl agendarcitasflutter
 
+## Instalación de despendencia
 
+    flutter pub add firebase_performance
 
