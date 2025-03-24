@@ -7,10 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
   @override
-  _LoginViewState createState() => _LoginViewState();
+  LoginViewState createState() => LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -40,6 +40,7 @@ class _LoginViewState extends State<LoginView> {
       if (response.statusCode == 200 && data['token'] != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', data['token']);
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() => _errorMessage = data['message'] ?? 'Error desconocido');
@@ -71,15 +72,15 @@ class _LoginViewState extends State<LoginView> {
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(color: Color(0x4D0038FF), width: 4),
+                  side: const  BorderSide(color: Color(0x4D0038FF), width: 4),
                 ),
                 elevation: 10,
-                shadowColor: Color(0x800038FF),
+                shadowColor: const Color(0x800038FF),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                       child: Image.asset(
                         "assets/images/logo.png",
                         height: 210,
@@ -96,7 +97,7 @@ class _LoginViewState extends State<LoginView> {
                           children: [
                             TextFormField(
                               controller: _usuarioController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Usuario',
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.perm_identity),
@@ -104,14 +105,14 @@ class _LoginViewState extends State<LoginView> {
                               validator: (value) =>
                                   value!.isEmpty ? 'Ingrese su usuario' : null,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller: _passwordController,
                               obscureText: !_passwordVisible,
                               decoration: InputDecoration(
                                 labelText: 'Contraseña',
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.lock),
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.lock),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _passwordVisible
@@ -127,27 +128,27 @@ class _LoginViewState extends State<LoginView> {
                                   value!.isEmpty ? 'Ingrese su contraseña' : null,
                             ),
                             if (_errorMessage != null) ...[
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(_errorMessage!,
-                                  style: TextStyle(color: Colors.red)),
+                                  style: const TextStyle(color: Colors.red)),
                             ],
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             _isLoading
-								? Center(child: CircularProgressIndicator())
+								? const Center(child: CircularProgressIndicator())
 								: Center( // <-- Esto centra el botón horizontalmente
 									child: SizedBox(
 									  width: MediaQuery.of(context).size.width / 3, // Ajusta el ancho a un tercio de la pantalla
 									  child: ElevatedButton(
 										onPressed: _login,
 										style: ButtonStyle(
-										  backgroundColor: MaterialStateProperty.all(Color(0xFF004AAD)), // Color de fondo
-										  minimumSize: MaterialStateProperty.all(Size(double.infinity, 48)), // Altura del botón
-										  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 16)), // Ajusta el padding si es necesario
-										  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+										  backgroundColor: WidgetStateProperty.all(const Color(0xFF004AAD)), // Color de fondo
+										  minimumSize: WidgetStateProperty.all(const Size(double.infinity, 48)), // Altura del botón
+										  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 16)), // Ajusta el padding si es necesario
+										  shape: WidgetStateProperty.all(RoundedRectangleBorder(
 											borderRadius: BorderRadius.circular(5), // Bordes redondeados
 										  )),
 										),
-										child: Text(
+										child: const Text(
 										  'Iniciar Sesión',
 										  style: TextStyle(
 											color: Colors.white, // Color del texto
@@ -162,23 +163,23 @@ class _LoginViewState extends State<LoginView> {
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/reset-password');
                                 },
-                                child: Text(
+                                child: const Text(
                                   '¿Recuperar Contraseña?',
                                   style: TextStyle(color: Colors.blue),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Container(
                               width: double.infinity,
-							  padding: EdgeInsets.only(top: 10),
+							  padding: const EdgeInsets.only(top: 10),
                               //padding: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 border: Border(
                                     top: BorderSide(color: Colors.blue, width: 2)),
                               ),
                               alignment: Alignment.center,
-                              child: Text(
+                              child: const Text(
                                 'Sistema de Gestión Hospitalaria',
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.bold),

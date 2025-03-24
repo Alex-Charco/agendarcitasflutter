@@ -9,7 +9,7 @@ class AppRoutes {
 
     switch (routeName) {
       case login:
-        return MaterialPageRoute(builder: (_) => LoginView());
+        return MaterialPageRoute(builder: (_) => const LoginView());
       default:
         return MaterialPageRoute(builder: (_) => const LoginView());
     }
