@@ -34,8 +34,15 @@ jobs:
       #- run: flutter test
 
       # Construir el APK
-      - name: Build APK
-        run: flutter build apk --release
+      #- name: Build APK
+        #run: flutter build apk --release
+      - run: flutter build apk
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v1.0.${{github.run_number}}
+          token: ${{ secrets.GIT_TOKEN }}
 
         # Descargar y ejecutar SonarScanner
       - name: Download sonar-scanner
