@@ -63,6 +63,7 @@ class LoginViewState extends State<LoginView> {
               fit: BoxFit.cover,
             ),
           ),
+          // ignore: deprecated_member_use
           Container(
             color: Colors.black.withOpacity(0.2),
           ),
