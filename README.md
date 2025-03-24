@@ -10,3 +10,8 @@ Crear el proyecto ejecutando el comando:
 
     flutter pub add firebase_performance
 
+	flutter pub add shared_preferences
+	
+	flutter pub add http
+	
+	flutter pub add flutter_svg
