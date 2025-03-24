@@ -58,15 +58,14 @@ class LoginViewState extends State<LoginView> {
       body: Stack(
         children: [
           Positioned.fill(
+          child: Opacity(
+            opacity: 0.2,
             child: SvgPicture.asset(
               "assets/images/background.svg",
               fit: BoxFit.cover,
             ),
           ),
-          // ignore: deprecated_member_use
-          Container(
-            color: Colors.black.withOpacity(0.2),
-          ),
+        ),
           Center(
             child: SingleChildScrollView(
               child: Card(
