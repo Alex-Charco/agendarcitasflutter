@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:agendarcitasflutter/views/home_view.dart'; // Asegúrate de que la ruta sea la correcta.
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -31,9 +30,6 @@ class LoginViewState extends State<LoginView> {
   final usuario = _usuarioController.text.trim();
   final password = _passwordController.text.trim();
 
-  print('Usuario: $usuario');
-  print('Password: $password');
-
   if (usuario.isEmpty || password.isEmpty) {
     setState(() {
       _errorMessage = "Por favor, ingrese usuario y contraseña";
@@ -56,7 +52,7 @@ class LoginViewState extends State<LoginView> {
     );
 
     final data = jsonDecode(response.body);
-    print('Respuesta API: $data');
+
 
     if (response.statusCode == 200 && data['token'] != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,10 +62,12 @@ class LoginViewState extends State<LoginView> {
       // Validar el rol antes de redirigir
       if (data['user']['rol']['id_rol'] == 1) {
         Future.delayed(Duration.zero, () {
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, '/home');
         });
       } else {
         Future.delayed(Duration.zero, () {
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, '/dashboard');
         });
       }
@@ -77,7 +75,6 @@ class LoginViewState extends State<LoginView> {
       setState(() => _errorMessage = data['message'] ?? 'Error desconocido');
     }
   } catch (e) {
-    print('Error de conexión: $e');
     setState(() => _errorMessage = 'Error de conexión');
   }
 
@@ -194,7 +191,7 @@ class LoginViewState extends State<LoginView> {
                             Center(
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/home');
+                                  Navigator.pushNamed(context, '/reset');
                                 },
                                 child: const Text(
                                   '¿Recuperar Contraseña?',
