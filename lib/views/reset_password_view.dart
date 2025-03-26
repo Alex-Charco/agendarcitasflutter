@@ -2,6 +2,7 @@ import 'package:agendarcitasflutter/widgets/custom_alert.dart';
 import 'package:agendarcitasflutter/utils/validators.dart';
 import 'package:agendarcitasflutter/views/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,6 +19,11 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
   final String _message = "";
 
   Future<void> _requestPasswordReset() async {
+    final urlReset = dotenv.env['API_URL_RESET'];  // Carga la URL desde el archivo .env
+  if (urlReset == null) {
+    return;
+  }
+  
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -41,7 +47,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
     // v4: Solicitud para reiniciar contraseña
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:5000/auth/request-password-reset'),
+        Uri.parse(urlReset),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
       );

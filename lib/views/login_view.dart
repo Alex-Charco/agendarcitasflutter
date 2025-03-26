@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,6 +20,11 @@ class LoginViewState extends State<LoginView> {
   String? _errorMessage;
 
   Future<void> _login() async {
+    final url = dotenv.env['API_URL'];  // Carga la URL desde el archivo .env
+  if (url == null) {
+    return;
+  }
+
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -39,7 +45,7 @@ class LoginViewState extends State<LoginView> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:5000/api/auth/login'),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

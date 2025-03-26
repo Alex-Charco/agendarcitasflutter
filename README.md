@@ -20,5 +20,9 @@ Para ejecut elar proyecto Flutter se utiliza el comando:
 	
 	flutter pub add flutter_svg
 
+	flutter pub add flutter_dotenv
+
+Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
+
 ## Corrección de errores
 Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
