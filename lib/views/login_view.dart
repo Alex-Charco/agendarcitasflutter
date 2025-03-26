@@ -173,12 +173,12 @@ class LoginViewState extends State<LoginView> {
                                           onPressed: _login,
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(const Color(0xFF004AAD)),
-                                            minimumSize: MaterialStateProperty.all(
+                                                WidgetStateProperty.all(const Color(0xFF004AAD)),
+                                            minimumSize: WidgetStateProperty.all(
                                                 const Size(double.infinity, 48)),
-                                            padding: MaterialStateProperty.all(
+                                            padding: WidgetStateProperty.all(
                                                 const EdgeInsets.symmetric(vertical: 16)),
-                                            shape: MaterialStateProperty.all(
+                                            shape: WidgetStateProperty.all(
                                                 RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(5),
                                             )),

@@ -15,7 +15,7 @@ class ResetPasswordView extends StatefulWidget {
 
 class ResetPasswordViewState extends State<ResetPasswordView> {
   final TextEditingController _emailController = TextEditingController();
-  String _message = "";
+  final String _message = "";
 
   Future<void> _requestPasswordReset() async {
     final email = _emailController.text.trim();
@@ -52,6 +52,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
 
       // Mostrar mensaje de confirmación con CustomAlert
       CustomAlert.showSuccessDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         title: "Solicitud enviada",
         message: message,
@@ -66,6 +67,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
     } catch (e) {
       // Mostrar mensaje de error con CustomAlert
       CustomAlert.showErrorDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         title: "Error",
         message:
@@ -98,7 +100,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
                 elevation: 5,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-				  side: BorderSide(color: const Color(0x800038FF), width: 4),
+				  side: const BorderSide(color: Color(0x800038FF), width: 4),
 				  ),
 				shadowColor: const Color(0x800038FF),
                 child: Padding(
