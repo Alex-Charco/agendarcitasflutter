@@ -30,6 +30,12 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+          
+      # Crear el archivo .env temporal (con valores de ejemplo o reales)
+      - name: Create .env file (with dummy or real values)
+        run: |
+          echo "API_URL=https://localhost:6666/app" > .env
+          echo "API_URL_RESET=https://localhost:6677/ap" >> .env
 
       # Instalar dependencias y analizar código
       - name: Install dependencies
