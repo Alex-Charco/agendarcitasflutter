@@ -25,4 +25,9 @@ Para ejecut elar proyecto Flutter se utiliza el comando:
 Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
 
 ## Corrección de errores
-Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
+1. Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
+
+2. Solución al problema en el emulador de **"Error en el servidor"**, no permitía logearse.
+
+**Solución:**
+Agregando la IP, ya que la API esta en servidor local.

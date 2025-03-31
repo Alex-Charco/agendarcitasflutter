@@ -20,10 +20,10 @@ class LoginViewState extends State<LoginView> {
   String? _errorMessage;
 
   Future<void> _login() async {
-    final url = dotenv.env['API_URL'];  // Carga la URL desde el archivo .env
-  if (url == null) {
-    return;
-  }
+    final url = dotenv.env['API_URL']; // Carga la URL desde el archivo .env
+    if (url == null) {
+      return;
+    }
 
     if (!_formKey.currentState!.validate()) return;
 
@@ -116,16 +116,22 @@ class LoginViewState extends State<LoginView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                        child: Image.asset(
-                          "assets/images/logo.png",
-                          height: 210,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20)),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Image.asset(
+                              "assets/images/logo.png",
+                              height: 115,
+                              width: constraints
+                                  .maxWidth, // Se ajusta al ancho disponible
+                              fit: BoxFit.contain, // Evita la distorsión
+                            );
+                          },
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(18.0),
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -135,20 +141,25 @@ class LoginViewState extends State<LoginView> {
                                 controller: _usuarioController,
                                 decoration: const InputDecoration(
                                   labelText: 'Usuario',
+                                  labelStyle: TextStyle(fontSize: 14),
                                   border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.perm_identity),
+                                  prefixIcon: Icon(Icons.perm_identity, size: 18),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 9, horizontal: 10)
                                 ),
-                                validator: (value) =>
-                                    value!.isEmpty ? 'Ingrese su usuario' : null,
+                                validator: (value) => value!.isEmpty
+                                    ? 'Ingrese su usuario'
+                                    : null,
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 14),
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: !_passwordVisible,
                                 decoration: InputDecoration(
                                   labelText: 'Contraseña',
+                                  labelStyle: const TextStyle(fontSize: 14),
                                   border: const OutlineInputBorder(),
-                                  prefixIcon: const Icon(Icons.lock),
+                                  prefixIcon: const Icon(Icons.lock, size: 18),
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _passwordVisible
@@ -161,8 +172,9 @@ class LoginViewState extends State<LoginView> {
                                     },
                                   ),
                                 ),
-                                validator: (value) =>
-                                    value!.isEmpty ? 'Ingrese su contraseña' : null,
+                                validator: (value) => value!.isEmpty
+                                    ? 'Ingrese su contraseña'
+                                    : null,
                               ),
                               if (_errorMessage != null) ...[
                                 const SizedBox(height: 10),
@@ -171,29 +183,37 @@ class LoginViewState extends State<LoginView> {
                               ],
                               const SizedBox(height: 20),
                               _isLoading
-                                  ? const Center(child: CircularProgressIndicator())
+                                  ? const Center(
+                                      child: CircularProgressIndicator())
                                   : Center(
                                       child: SizedBox(
-                                        width: MediaQuery.of(context).size.width / 3,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
                                         child: ElevatedButton(
                                           onPressed: _login,
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                WidgetStateProperty.all(const Color(0xFF004AAD)),
-                                            minimumSize: WidgetStateProperty.all(
-                                                const Size(double.infinity, 48)),
+                                                WidgetStateProperty.all(
+                                                    const Color(0xFF004AAD)),
+                                            minimumSize:
+                                                WidgetStateProperty.all(
+                                                    const Size(
+                                                        double.infinity, 36)),
                                             padding: WidgetStateProperty.all(
-                                                const EdgeInsets.symmetric(vertical: 16)),
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 8)),
                                             shape: WidgetStateProperty.all(
                                                 RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(5),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
                                             )),
                                           ),
                                           child: const Text(
                                             'Iniciar Sesión',
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 16,
+                                              fontSize: 14,
                                             ),
                                           ),
                                         ),
@@ -206,7 +226,7 @@ class LoginViewState extends State<LoginView> {
                                   },
                                   child: const Text(
                                     '¿Recuperar Contraseña?',
-                                    style: TextStyle(color: Colors.blue),
+                                    style: TextStyle(color: Colors.blue, fontSize: 13),
                                   ),
                                 ),
                               ),
@@ -216,14 +236,16 @@ class LoginViewState extends State<LoginView> {
                                 padding: const EdgeInsets.only(top: 10),
                                 decoration: const BoxDecoration(
                                   border: Border(
-                                    top: BorderSide(color: Colors.blue, width: 2),
+                                    top: BorderSide(
+                                        color: Colors.blue, width: 2),
                                   ),
                                 ),
                                 alignment: Alignment.center,
                                 child: const Text(
                                   'Sistema de Gestión Hospitalaria',
                                   style: TextStyle(
-                                      fontSize: 14, fontWeight: FontWeight.bold),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
