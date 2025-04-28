@@ -63,7 +63,9 @@ class LoginViewState extends State<LoginView> {
         await prefs.setString('token', data['token']);
         await prefs.setInt(
             'rol', data['user']['rol']['id_rol']); // Guardar el rol
-
+		await prefs.setString('identificacion', data['user']['identificacion']);
+		await prefs.setString('user', jsonEncode(data['user']));
+		
         // Validar el rol antes de redirigir
         if (data['user']['rol']['id_rol'] == 1) {
           Future.delayed(Duration.zero, () {

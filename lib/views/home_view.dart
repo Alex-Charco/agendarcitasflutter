@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/consulta_cita_paciente_page.dart'; // Asegúrate de crear este archivo también
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -9,14 +10,32 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Agendamiento de citas médicas'),
       ),
-      body: SafeArea( // Se agrega SafeArea para evitar problemas en dispositivos con notch
+      body: SafeArea(
         child: Center(
-          child: Semantics( // Se agrega Semantics para mejorar accesibilidad
-            label: 'Mensaje de bienvenida',
-            child: const Text(
-              'Bienvenido a la página principal',
-              style: TextStyle(fontSize: 18),
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Semantics(
+                label: 'Mensaje de bienvenida',
+                child: const Text(
+                  'Bienvenido a la página principal',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>  ConsultaCitaPacientePage(),
+      ),
+    );
+  },
+  child: const Text('Consultar Cita'),
+),
+
+            ],
           ),
         ),
       ),
