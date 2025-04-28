@@ -7,7 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ConsultaCitaPacientePage extends StatefulWidget {
+  const ConsultaCitaPacientePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ConsultaCitaPacientePageState createState() => _ConsultaCitaPacientePageState();
 }
 
@@ -113,8 +116,8 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
                                   : SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: DataTable(
-                                        headingRowColor: MaterialStateColor.resolveWith((states) => Colors.blueGrey.shade50),
-                                        dataRowColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                                        headingRowColor: WidgetStateColor.resolveWith((states) => Colors.blueGrey.shade50),
+                                        dataRowColor: WidgetStateColor.resolveWith((states) => Colors.white),
                                         columns: const [
                                           DataColumn(label: Text('Fecha', style: TextStyle(fontWeight: FontWeight.bold))),
                                           DataColumn(label: Text('Hora', style: TextStyle(fontWeight: FontWeight.bold))),
