@@ -20,11 +20,8 @@ class LoginViewState extends State<LoginView> {
   String? _errorMessage;
 
   Future<void> _login() async {
-    final url = dotenv.env['API_URL']; // Carga la URL desde el archivo .env
-    if (url == null) {
-      return;
-    }
-
+    final url = dotenv.env['API_URL'];
+    if (url == null) return;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -32,56 +29,31 @@ class LoginViewState extends State<LoginView> {
       _errorMessage = null;
     });
 
-    final usuario = _usuarioController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (usuario.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = "Por favor, ingrese usuario y contraseña";
-        _isLoading = false;
-      });
-      return;
-    }
-
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'nombre_usuario': usuario,
-          'password': password,
+          'nombre_usuario': _usuarioController.text.trim(),
+          'password': _passwordController.text.trim(),
         }),
       );
 
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['token'] != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', data['token']);
-        await prefs.setInt(
-            'rol', data['user']['rol']['id_rol']); // Guardar el rol
-		await prefs.setString('identificacion', data['user']['identificacion']);
-		await prefs.setString('user', jsonEncode(data['user']));
-		
-        // Validar el rol antes de redirigir
-        if (data['user']['rol']['id_rol'] == 1) {
-          Future.delayed(Duration.zero, () {
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacementNamed(context, '/home');
-          });
-        } else {
-          Future.delayed(Duration.zero, () {
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacementNamed(context, '/dashboard');
-          });
-        }
+        await prefs.setInt('rol', data['user']['rol']['id_rol']);
+        await prefs.setString('identificacion', data['user']['identificacion']);
+        await prefs.setString('user', jsonEncode(data['user']));
+
+        Navigator.pushReplacementNamed(context,
+            data['user']['rol']['id_rol'] == 1 ? '/home' : '/dashboard');
       } else {
         setState(() => _errorMessage = data['message'] ?? 'Error desconocido');
       }
-    } catch (e) {
+    } catch (_) {
       setState(() => _errorMessage = 'Error de conexión');
     }
 
@@ -93,84 +65,134 @@ class LoginViewState extends State<LoginView> {
     return Scaffold(
       body: Stack(
         children: [
+          // Imagen de fondo
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.2,
-              child: SvgPicture.asset(
-                "assets/images/background.svg",
-                fit: BoxFit.cover,
-              ),
+            child: SvgPicture.asset(
+              "assets/images/background.svg",
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Capa negra translúcida
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.05),
             ),
           ),
           Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 420),
                 child: Card(
-                  margin: EdgeInsets.zero,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: Color(0x4D0038FF), width: 4),
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(
+                      color: Color(0x4D0038FF), // Azul translúcido
+                      width: 4,
+                    ),
                   ),
-                  elevation: 5,
                   shadowColor: const Color(0x800038FF),
+                  // Eliminamos el padding interior aquí y lo movemos solo a la parte del formulario
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(20)),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Image.asset(
-                              "assets/images/logo.png",
-                              height: 115,
-                              width: constraints
-                                  .maxWidth, // Se ajusta al ancho disponible
-                              fit: BoxFit.contain, // Evita la distorsión
-                            );
-                          },
+                      // Imagen con fondo blanco ocupando todo el ancho
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        child: Image.asset(
+                          "assets/images/logo.png",
+                          height: 120,
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
+                      // Formulario con padding interno
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFFB2DBF7), Color(0xFFF5F7FC)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 24),
                         child: Form(
                           key: _formKey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
                                 controller: _usuarioController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Usuario',
-                                  labelStyle: TextStyle(fontSize: 14),
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.perm_identity, size: 18),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 9, horizontal: 10)
+                                decoration: InputDecoration(
+                                  labelText: 'Ingresar el usuario *',
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,             // Tamaño del label
+                                  ),
+                                  prefixIcon: Icon(Icons.person, color: Colors.grey[500]),
+                                  filled: true,
+                                  fillColor:
+                                      Colors.grey[100], // Fondo gris claro
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Color.fromRGBO(6, 41, 165, 1),
+                                        width: 2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                                 validator: (value) => value!.isEmpty
                                     ? 'Ingrese su usuario'
                                     : null,
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: 16),
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: !_passwordVisible,
                                 decoration: InputDecoration(
-                                  labelText: 'Contraseña',
-                                  labelStyle: const TextStyle(fontSize: 14),
-                                  border: const OutlineInputBorder(),
-                                  prefixIcon: const Icon(Icons.lock, size: 18),
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
+                                  labelText: 'Ingresar la contraseña *',
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,             // Tamaño del label
+                                  ),
+                                  prefixIcon: Icon(Icons.lock, color: Colors.grey[500]),
+                                  filled: true,
+                                  fillColor:
+                                      Colors.grey[100], // Fondo gris claro
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Color.fromRGBO(6, 41, 165, 1),
+                                        width: 2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
-                                      _passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
+                                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                      color: Colors.grey[600], // Cambia el color aquí
                                     ),
                                     onPressed: () {
-                                      setState(() =>
-                                          _passwordVisible = !_passwordVisible);
+                                      setState(() => _passwordVisible = !_passwordVisible);
                                     },
                                   ),
                                 ),
@@ -179,48 +201,40 @@ class LoginViewState extends State<LoginView> {
                                     : null,
                               ),
                               if (_errorMessage != null) ...[
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 12),
                                 Text(_errorMessage!,
                                     style: const TextStyle(color: Colors.red)),
                               ],
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 24),
                               _isLoading
-                                  ? const Center(
-                                      child: CircularProgressIndicator())
+                                  ? const CircularProgressIndicator()
                                   : Center(
                                       child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2,
+                                        width: 150, // Ancho reducido
                                         child: ElevatedButton(
                                           onPressed: _login,
-                                          style: ButtonStyle(
+                                          style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                                WidgetStateProperty.all(
-                                                    const Color(0xFF004AAD)),
-                                            minimumSize:
-                                                WidgetStateProperty.all(
-                                                    const Size(
-                                                        double.infinity, 36)),
-                                            padding: WidgetStateProperty.all(
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 8)),
-                                            shape: WidgetStateProperty.all(
-                                                RoundedRectangleBorder(
+                                                const Color.fromRGBO(
+                                                    6, 41, 165, 1),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 18), // Más alto
+                                            shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(5),
-                                            )),
+                                                  BorderRadius.circular(15),
+                                            ),
                                           ),
                                           child: const Text(
-                                            'Iniciar Sesión',
+                                            'Ingresar',
                                             style: TextStyle(
+                                              fontSize: 16,
                                               color: Colors.white,
-                                              fontSize: 14,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
+                              const SizedBox(height: 12),
                               Center(
                                 child: TextButton(
                                   onPressed: () {
@@ -228,27 +242,23 @@ class LoginViewState extends State<LoginView> {
                                   },
                                   child: const Text(
                                     '¿Recuperar Contraseña?',
-                                    style: TextStyle(color: Colors.blue, fontSize: 13),
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(6, 41, 165, 1),
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.only(top: 10),
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    top: BorderSide(
-                                        color: Colors.blue, width: 2),
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                child: const Text(
-                                  'Sistema de Gestión Hospitalaria',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
+                              const SizedBox(height: 8),
+                              const Divider(),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "Sistema de Gestión Hospitalaria",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(6, 41, 165, 1),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
