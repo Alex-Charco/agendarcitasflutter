@@ -48,6 +48,7 @@ class LoginViewState extends State<LoginView> {
         await prefs.setString('identificacion', data['user']['identificacion']);
         await prefs.setString('user', jsonEncode(data['user']));
 
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context,
             data['user']['rol']['id_rol'] == 1 ? '/home' : '/dashboard');
       } else {
