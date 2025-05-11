@@ -139,14 +139,14 @@ class LoginViewState extends State<LoginView> {
                                 decoration: InputDecoration(
                                   labelText: 'Ingresar el usuario *',
                                   labelStyle: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: Colors.grey[700],
                                     fontSize: 14, // Tamaño del label
                                   ),
                                   prefixIcon: Icon(Icons.person,
                                       color: Colors.grey[500]),
                                   filled: true,
                                   fillColor:
-                                      Colors.grey[100], // Fondo gris claro
+                                      const Color.fromARGB(255, 247, 246, 246), // Fondo gris claro
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.grey.shade200),
@@ -170,14 +170,14 @@ class LoginViewState extends State<LoginView> {
                                 decoration: InputDecoration(
                                   labelText: 'Ingresar la contraseña *',
                                   labelStyle: TextStyle(
-                                    color: Colors.grey[600],
+                                    color: Colors.grey[700],
                                     fontSize: 14, // Tamaño del label
                                   ),
                                   prefixIcon:
                                       Icon(Icons.lock, color: Colors.grey[500]),
                                   filled: true,
                                   fillColor:
-                                      Colors.grey[100], // Fondo gris claro
+                                      const Color.fromARGB(255, 247, 246, 246), // Fondo gris claro
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.grey.shade200),
