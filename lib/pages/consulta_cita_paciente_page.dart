@@ -12,8 +12,7 @@ class ConsultaCitaPacientePage extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _ConsultaCitaPacientePageState createState() =>
-      _ConsultaCitaPacientePageState();
+  _ConsultaCitaPacientePageState createState() => _ConsultaCitaPacientePageState();
 }
 
 class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
@@ -31,19 +30,16 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
   Future<void> fetchData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userJson =
-          prefs.getString('user'); // 🔥 Buscar los datos del user guardados
+      String? userJson = prefs.getString('user');
 
       if (userJson == null) {
         throw Exception('No se encontró la información del usuario.');
       }
 
       final userData = json.decode(userJson);
-      String identificacionPaciente =
-          userData['identificacion']; // 👈 Aquí se saca
+      String identificacionPaciente = userData['identificacion'];
 
-      PacienteCitaResponse response =
-          await ApiService.getCitasPorIdentificacion(identificacionPaciente);
+      PacienteCitaResponse response = await ApiService.getCitasPorIdentificacion(identificacionPaciente);
 
       setState(() {
         paciente = response.paciente;
@@ -58,65 +54,70 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
     }
   }
 
+  Widget _buildBody() {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (errorMessage != null) {
+      return Center(child: Text('Error: $errorMessage'));
+    }
+
+    if (paciente == null) {
+      return const Center(child: Text('No se encontró paciente'));
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  color: Colors.white,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          paciente!.nombre,
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text('Identificación: ${paciente!.identificacion}'),
+                        Text('Correo: ${paciente!.correo}'),
+                        Text('Edad: ${paciente!.edad} años'),
+                        Text('Grupo Etario: ${paciente!.grupoEtario}'),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                CitaDataTable(citas: citas),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Consulta de Citas'),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : errorMessage != null
-              ? Center(child: Text('Error: $errorMessage'))
-              : paciente == null
-                  ? const Center(child: Text('No se encontró paciente'))
-                  : LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SingleChildScrollView(
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Card(
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  color: Colors.white,
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          paciente!.nombre,
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                            'Identificación: ${paciente!.identificacion}'),
-                                        Text('Correo: ${paciente!.correo}'),
-                                        Text('Edad: ${paciente!.edad} años'),
-                                        Text(
-                                            'Grupo Etario: ${paciente!.grupoEtario}'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                CitaDataTable(citas: citas),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+      body: _buildBody(),
     );
   }
 }
