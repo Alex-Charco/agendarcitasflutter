@@ -76,7 +76,7 @@ class LoginViewState extends State<LoginView> {
           // Capa negra translúcida
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.05),
+              color: const Color.fromRGBO(0, 0, 0, 0.05),
             ),
           ),
           Center(
