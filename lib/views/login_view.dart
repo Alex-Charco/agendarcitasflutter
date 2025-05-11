@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +20,7 @@ class LoginViewState extends State<LoginView> {
   bool _passwordVisible = false;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _loginSuccess = false;
 
   Future<void> _login() async {
     final url = dotenv.env['API_URL'];
@@ -27,6 +30,7 @@ class LoginViewState extends State<LoginView> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _loginSuccess = false;
     });
 
     try {
@@ -48,9 +52,14 @@ class LoginViewState extends State<LoginView> {
         await prefs.setString('identificacion', data['user']['identificacion']);
         await prefs.setString('user', jsonEncode(data['user']));
 
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context,
-            data['user']['rol']['id_rol'] == 1 ? '/home' : '/dashboard');
+        setState(() => _loginSuccess = true);
+
+        // Mostrar el mensaje de éxito y redirigir después de 1-2 segundos
+        Timer(const Duration(seconds: 1), () {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context,
+              data['user']['rol']['id_rol'] == 1 ? '/home' : '/dashboard');
+        });
       } else {
         setState(() => _errorMessage = data['message'] ?? 'Error desconocido');
       }
@@ -59,6 +68,22 @@ class LoginViewState extends State<LoginView> {
     }
 
     setState(() => _isLoading = false);
+  }
+
+  String? _validateUser(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Ingrese su usuario';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Ingrese su contraseña';
+    } else if (value.length < 10) {
+      return 'La contraseña debe tener al menos 10 caracteres';
+    }
+    return null;
   }
 
   @override
@@ -145,11 +170,10 @@ class LoginViewState extends State<LoginView> {
                                   prefixIcon: Icon(Icons.person,
                                       color: Colors.grey[500]),
                                   filled: true,
-                                  fillColor:
-                                      const Color.fromARGB(255, 247, 246, 246), // Fondo gris claro
+                                  fillColor: const Color.fromARGB(255, 252, 251, 251), // Fondo gris claro
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.grey.shade200),
+                                        BorderSide(color: Colors.grey.shade100),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   focusedBorder: OutlineInputBorder(
@@ -159,9 +183,7 @@ class LoginViewState extends State<LoginView> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                validator: (value) => value!.isEmpty
-                                    ? 'Ingrese su usuario'
-                                    : null,
+                                validator: _validateUser,
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
@@ -176,11 +198,10 @@ class LoginViewState extends State<LoginView> {
                                   prefixIcon:
                                       Icon(Icons.lock, color: Colors.grey[500]),
                                   filled: true,
-                                  fillColor:
-                                      const Color.fromARGB(255, 247, 246, 246), // Fondo gris claro
+                                  fillColor: const Color.fromARGB(255, 252, 251, 251),  // Fondo gris claro
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.grey.shade200),
+                                        BorderSide(color: Colors.grey.shade100),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   focusedBorder: OutlineInputBorder(
@@ -203,14 +224,19 @@ class LoginViewState extends State<LoginView> {
                                     },
                                   ),
                                 ),
-                                validator: (value) => value!.isEmpty
-                                    ? 'Ingrese su contraseña'
-                                    : null,
+                                validator: _validatePassword,
                               ),
                               if (_errorMessage != null) ...[
                                 const SizedBox(height: 12),
                                 Text(_errorMessage!,
                                     style: const TextStyle(color: Colors.red)),
+                              ],
+                              if (_loginSuccess) ...[
+                                const SizedBox(height: 12),
+                                const Text(
+                                  "Inicio de sesión exitoso. Redirigiendo...",
+                                  style: TextStyle(color: Colors.green),
+                                ),
                               ],
                               const SizedBox(height: 24),
                               _isLoading
@@ -270,7 +296,8 @@ class LoginViewState extends State<LoginView> {
                                           'Recuperar contraseña',
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color: Color.fromRGBO(6, 41, 165, 1),
+                                            color:
+                                                Color.fromRGBO(6, 41, 165, 1),
                                           ),
                                         ),
                                       ),
