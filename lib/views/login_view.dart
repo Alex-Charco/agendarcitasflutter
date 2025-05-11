@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,11 +20,55 @@ class LoginViewState extends State<LoginView> {
   bool _isLoading = false;
   String? _errorMessage;
   bool _loginSuccess = false;
+  int _failedAttempts = 0;
+
+  final int _maxFailedAttempts = 3;
+  final int _lockoutMinutes = 15;
+
+  DateTime? _lockoutEndTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLockoutState();
+  }
+
+  Future<void> _loadLockoutState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final endTimeStr = prefs.getString('lockoutEndTime');
+    if (endTimeStr != null) {
+      final lockoutEnd = DateTime.tryParse(endTimeStr);
+      if (lockoutEnd != null && lockoutEnd.isAfter(DateTime.now())) {
+        setState(() => _lockoutEndTime = lockoutEnd);
+      } else {
+        await prefs.remove('lockoutEndTime');
+      }
+    }
+  }
+
+  Future<void> _setLockout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lockoutEnd = DateTime.now().add(Duration(minutes: _lockoutMinutes));
+    await prefs.setString('lockoutEndTime', lockoutEnd.toIso8601String());
+    setState(() {
+      _lockoutEndTime = lockoutEnd;
+      _errorMessage =
+          'Has superado el número máximo de intentos. Tu cuenta se ha bloqueado por 15 minutos.';
+    });
+  }
 
   Future<void> _login() async {
     final url = dotenv.env['API_URL'];
     if (url == null) return;
     if (!_formKey.currentState!.validate()) return;
+
+    if (_lockoutEndTime != null && DateTime.now().isBefore(_lockoutEndTime!)) {
+      setState(() {
+        _errorMessage =
+            'Has superado el número máximo de intentos. Tu cuenta está bloqueada hasta las ${_lockoutEndTime!.hour.toString().padLeft(2, '0')}:${_lockoutEndTime!.minute.toString().padLeft(2, '0')}.';
+      });
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -51,20 +94,37 @@ class LoginViewState extends State<LoginView> {
         await prefs.setInt('rol', data['user']['rol']['id_rol']);
         await prefs.setString('identificacion', data['user']['identificacion']);
         await prefs.setString('user', jsonEncode(data['user']));
+        await prefs.remove('lockoutEndTime');
 
-        setState(() => _loginSuccess = true);
+        setState(() {
+          _loginSuccess = true;
+          _failedAttempts = 0;
+          _lockoutEndTime = null;
+        });
 
-        // Mostrar el mensaje de éxito y redirigir después de 1-2 segundos
         Timer(const Duration(seconds: 1), () {
-          // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context,
               data['user']['rol']['id_rol'] == 1 ? '/home' : '/dashboard');
         });
       } else {
-        setState(() => _errorMessage = data['message'] ?? 'Error desconocido');
+        setState(() {
+          _failedAttempts++;
+          if (_failedAttempts >= _maxFailedAttempts) {
+            _setLockout();
+          } else {
+            _errorMessage = data['message'] ?? 'Error desconocido';
+          }
+        });
       }
     } catch (_) {
-      setState(() => _errorMessage = 'Error de conexión');
+      setState(() {
+        _failedAttempts++;
+        if (_failedAttempts >= _maxFailedAttempts) {
+          _setLockout();
+        } else {
+          _errorMessage = 'Error de conexión';
+        }
+      });
     }
 
     setState(() => _isLoading = false);
@@ -91,14 +151,12 @@ class LoginViewState extends State<LoginView> {
     return Scaffold(
       body: Stack(
         children: [
-          // Imagen de fondo
           Positioned.fill(
             child: SvgPicture.asset(
               "assets/images/background.svg",
               fit: BoxFit.cover,
             ),
           ),
-          // Capa negra translúcida
           Positioned.fill(
             child: Container(
               color: const Color.fromRGBO(0, 0, 0, 0.05),
@@ -113,16 +171,14 @@ class LoginViewState extends State<LoginView> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: const BorderSide(
-                      color: Color(0x4D0038FF), // Azul translúcido
+                      color: Color(0x4D0038FF),
                       width: 4,
                     ),
                   ),
                   shadowColor: const Color(0x800038FF),
-                  // Eliminamos el padding interior aquí y lo movemos solo a la parte del formulario
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Imagen con fondo blanco ocupando todo el ancho
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -139,7 +195,6 @@ class LoginViewState extends State<LoginView> {
                           fit: BoxFit.contain,
                         ),
                       ),
-                      // Formulario con padding interno
                       Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
@@ -165,12 +220,12 @@ class LoginViewState extends State<LoginView> {
                                   labelText: 'Ingresar el usuario *',
                                   labelStyle: TextStyle(
                                     color: Colors.grey[700],
-                                    fontSize: 14, // Tamaño del label
+                                    fontSize: 14,
                                   ),
                                   prefixIcon: Icon(Icons.person,
                                       color: Colors.grey[500]),
                                   filled: true,
-                                  fillColor: const Color.fromARGB(255, 252, 251, 251), // Fondo gris claro
+                                  fillColor: const Color.fromARGB(255, 252, 251, 251),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.grey.shade100),
@@ -193,12 +248,12 @@ class LoginViewState extends State<LoginView> {
                                   labelText: 'Ingresar la contraseña *',
                                   labelStyle: TextStyle(
                                     color: Colors.grey[700],
-                                    fontSize: 14, // Tamaño del label
+                                    fontSize: 14,
                                   ),
                                   prefixIcon:
                                       Icon(Icons.lock, color: Colors.grey[500]),
                                   filled: true,
-                                  fillColor: const Color.fromARGB(255, 252, 251, 251),  // Fondo gris claro
+                                  fillColor: const Color.fromARGB(255, 252, 251, 251),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.grey.shade100),
@@ -215,12 +270,10 @@ class LoginViewState extends State<LoginView> {
                                       _passwordVisible
                                           ? Icons.visibility
                                           : Icons.visibility_off,
-                                      color: Colors
-                                          .grey[600], // Cambia el color aquí
+                                      color: Colors.grey[600],
                                     ),
                                     onPressed: () {
-                                      setState(() =>
-                                          _passwordVisible = !_passwordVisible);
+                                      setState(() => _passwordVisible = !_passwordVisible);
                                     },
                                   ),
                                 ),
@@ -243,18 +296,16 @@ class LoginViewState extends State<LoginView> {
                                   ? const CircularProgressIndicator()
                                   : Center(
                                       child: SizedBox(
-                                        width: 150, // Ancho reducido
+                                        width: 150,
                                         child: ElevatedButton(
                                           onPressed: _login,
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                                const Color.fromRGBO(
-                                                    6, 41, 165, 1),
+                                                const Color.fromRGBO(6, 41, 165, 1),
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 18), // Más alto
+                                                vertical: 18),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                              borderRadius: BorderRadius.circular(15),
                                             ),
                                           ),
                                           child: const Text(
@@ -267,7 +318,7 @@ class LoginViewState extends State<LoginView> {
                                         ),
                                       ),
                                     ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 16),
                               Center(
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
