@@ -139,9 +139,10 @@ class LoginViewState extends State<LoginView> {
                                   labelText: 'Ingresar el usuario *',
                                   labelStyle: TextStyle(
                                     color: Colors.grey[600],
-                                    fontSize: 14,             // Tamaño del label
+                                    fontSize: 14, // Tamaño del label
                                   ),
-                                  prefixIcon: Icon(Icons.person, color: Colors.grey[500]),
+                                  prefixIcon: Icon(Icons.person,
+                                      color: Colors.grey[500]),
                                   filled: true,
                                   fillColor:
                                       Colors.grey[100], // Fondo gris claro
@@ -169,9 +170,10 @@ class LoginViewState extends State<LoginView> {
                                   labelText: 'Ingresar la contraseña *',
                                   labelStyle: TextStyle(
                                     color: Colors.grey[600],
-                                    fontSize: 14,             // Tamaño del label
+                                    fontSize: 14, // Tamaño del label
                                   ),
-                                  prefixIcon: Icon(Icons.lock, color: Colors.grey[500]),
+                                  prefixIcon:
+                                      Icon(Icons.lock, color: Colors.grey[500]),
                                   filled: true,
                                   fillColor:
                                       Colors.grey[100], // Fondo gris claro
@@ -188,11 +190,15 @@ class LoginViewState extends State<LoginView> {
                                   ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
-                                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                      color: Colors.grey[600], // Cambia el color aquí
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors
+                                          .grey[600], // Cambia el color aquí
                                     ),
                                     onPressed: () {
-                                      setState(() => _passwordVisible = !_passwordVisible);
+                                      setState(() =>
+                                          _passwordVisible = !_passwordVisible);
                                     },
                                   ),
                                 ),
@@ -236,16 +242,38 @@ class LoginViewState extends State<LoginView> {
                                     ),
                               const SizedBox(height: 12),
                               Center(
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/reset');
-                                  },
-                                  child: const Text(
-                                    '¿Recuperar Contraseña?',
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(6, 41, 165, 1),
-                                      fontSize: 13,
-                                    ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        '¿Olvidaste tu contraseña?: ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFF374151),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/reset');
+                                        },
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: const Size(0, 0),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        child: const Text(
+                                          'Recuperar contraseña',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color.fromRGBO(6, 41, 165, 1),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
