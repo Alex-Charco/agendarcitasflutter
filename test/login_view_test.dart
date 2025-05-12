@@ -143,5 +143,57 @@ void main() {
   expect(find.text('Credenciales incorrectas'), findsOneWidget);
 });
 
+  testWidgets('🟢 Token guardado en SharedPreferences tras login exitoso', (tester) async {
+  // Inicializar valores simulados en SharedPreferences
+  SharedPreferences.setMockInitialValues({});
+
+  final prefs = await SharedPreferences.getInstance();
+
+  // Mock del cliente HTTP que devuelve un token válido
+  when(mockHttpClient.post(
+    Uri.parse(dotenv.env['API_URL']!),
+    headers: anyNamed('headers'),
+    body: anyNamed('body'),
+  )).thenAnswer((_) async {
+    return http.Response(
+      '''
+      {
+        "token": "token_de_prueba",
+        "user": {
+          "rol": {
+            "id_rol": 1
+          },
+          "identificacion": "abc123"
+        }
+      }
+      ''',
+      200,
+    );
+  });
+
+  // Montar el widget
+  await tester.pumpWidget(
+    MaterialApp(
+      home: LoginView(
+        httpClient: mockHttpClient,
+        onLoginSuccess: (context, idRol) {},
+      ),
+    ),
+  );
+
+  // Llenar los campos de login
+  await tester.enterText(find.byType(TextFormField).at(0), 'usuario');
+  await tester.enterText(find.byType(TextFormField).at(1), 'contraseña_larga_valida');
+
+  // Simular tap en botón
+  await tester.tap(find.text('Ingresar'));
+  await tester.pump(); // inicia login
+  await tester.pump(const Duration(seconds: 1));
+  await tester.pumpAndSettle();
+
+  // Verificar que el token fue guardado en SharedPreferences
+  final storedToken = prefs.getString('token');
+  expect(storedToken, equals('token_de_prueba'));
+});
 
 }
