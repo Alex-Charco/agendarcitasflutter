@@ -219,4 +219,43 @@ void main() {
 
   });
 
+  testWidgets('Bloquea al usuario tras 3 intentos fallidos consecutivos', (WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues({});
+
+  // Crear un cliente falso que siempre responde con error 401 y mensaje de error.
+  final mockClient = MockClient();
+
+  // Definir el comportamiento del cliente falso cuando se hace la solicitud POST.
+  when(mockClient.post(any, headers: anyNamed('headers'), body: anyNamed('body')))
+      .thenAnswer((_) async {
+    return http.Response(jsonEncode({"message": "Usuario o contraseña incorrectos"}), 401);
+  });
+
+  // Renderizar el LoginView con el cliente falso
+  await tester.pumpWidget(
+    MaterialApp(
+      home: LoginView(httpClient: mockClient),
+    ),
+  );
+
+  final usuarioField = find.byType(TextFormField).at(0);
+  final passwordField = find.byKey(const Key('passwordField'));
+  final ingresarButton = find.text('Ingresar');
+
+  Future<void> intentarLoginFallido() async {
+    await tester.enterText(usuarioField, 'usuario_incorrecto');
+    await tester.enterText(passwordField, 'contraseña_incorrecta');
+    await tester.tap(ingresarButton);
+    await tester.pumpAndSettle();
+  }
+
+  // 3 intentos fallidos
+  await intentarLoginFallido();
+  await intentarLoginFallido();
+  await intentarLoginFallido();
+
+  // Verificar que se muestre el mensaje de bloqueo
+  expect(find.textContaining('Has superado el número máximo de intentos'), findsOneWidget);
+});
+
 }
