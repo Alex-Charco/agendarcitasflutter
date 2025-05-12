@@ -196,4 +196,27 @@ void main() {
   expect(storedToken, equals('token_de_prueba'));
 });
 
+  testWidgets('Muestra mensaje de sesión expirada si existe en SharedPreferences',
+      (WidgetTester tester) async {
+    // Configura SharedPreferences con expiredSession = true
+    SharedPreferences.setMockInitialValues({'expiredSession': true});
+
+    await tester.pumpWidget(const MaterialApp(home: LoginView()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.'), findsOneWidget);
+  });
+
+  testWidgets('No muestra mensaje si expiredSession no está definido',
+      (WidgetTester tester) async {
+    // Limpia las preferencias
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(const MaterialApp(home: LoginView()));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('expiredSessionMessage')), findsNothing);
+
+  });
+
 }
