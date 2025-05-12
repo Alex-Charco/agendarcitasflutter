@@ -24,6 +24,24 @@ Para ejecut elar proyecto Flutter se utiliza el comando:
 
 Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
 
+## Instalación de dependencias para pruebas unitarias
+
+	flutter pub add mockito
+
+	dependencies:
+  		mockito: ^5.4.4
+
+	dart run build_runner build
+
+	dev_dependencies:
+ 		 build_runner: ^2.3.3
+
+	dev_dependencies:
+		flutter_test:
+			sdk: flutter
+		mockito: ^5.4.4        # ✅ compatible con Dart 3.5.4 que se esta utilizando
+		build_runner: ^2.3.3   # ✅ también compatible
+
 ## Corrección de errores
 1. Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
 

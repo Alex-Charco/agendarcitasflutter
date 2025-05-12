@@ -24,7 +24,8 @@ class _HomeViewState extends State<HomeView> {
               Semantics(
                 label: 'Mensaje de bienvenida',
                 child: const Text(
-                  'Bienvenido a la página principal',
+                  'Bienvenido a la página principal', 
+                  key: Key('welcome-text'),
                   style: TextStyle(fontSize: 18),
                 ),
               ),
