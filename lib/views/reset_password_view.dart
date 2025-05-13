@@ -19,11 +19,9 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
   final String _message = "";
 
   Future<void> _requestPasswordReset() async {
-    final urlReset = dotenv.env['API_URL_RESET'];  // Carga la URL desde el archivo .env
-  if (urlReset == null) {
-    return;
-  }
-  
+    final urlReset = dotenv.env['API_URL_RESET'];
+    if (urlReset == null) return;
+
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -34,8 +32,8 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       );
       return;
     }
-	
-	if (!Validators.isValidEmail(email)) {
+
+    if (!Validators.isValidEmail(email)) {
       CustomAlert.showErrorDialog(
         context: context,
         title: "Correo inválido",
@@ -44,7 +42,6 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       return;
     }
 
-    // v4: Solicitud para reiniciar contraseña
     try {
       final response = await http.post(
         Uri.parse(urlReset),
@@ -53,17 +50,14 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       );
 
       final data = jsonDecode(response.body);
-      final message =
-          data['message'] ?? "Si el correo está registrado, recibirás un enlace.";
+      final message = data['message'] ??
+          "Si el correo está registrado, recibirás un enlace.";
 
-      // Mostrar mensaje de confirmación con CustomAlert
       CustomAlert.showSuccessDialog(
-        // ignore: use_build_context_synchronously
         context: context,
         title: "Solicitud enviada",
         message: message,
-		onConfirm: () {
-          // Redirigir al login cuando el usuario haga clic en OK
+        onConfirm: () {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const LoginView()),
@@ -71,9 +65,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
         },
       );
     } catch (e) {
-      // Mostrar mensaje de error con CustomAlert
       CustomAlert.showErrorDialog(
-        // ignore: use_build_context_synchronously
         context: context,
         title: "Error",
         message:
@@ -85,87 +77,158 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recuperar Contraseña'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Imagen SVG centrada fuera de la Card
-            SvgPicture.asset(
-              'assets/images/reset.svg',
-              height: 170,
-            ),
-            const SizedBox(height: 20),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Stack(
+                  children: [
+                    // Fondo con imagen SVG
+                    Positioned.fill(
+                      child: SvgPicture.asset(
+                        'assets/images/background.svg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
 
-            // Card con el formulario
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-				  side: const BorderSide(color: Color(0x800038FF), width: 4),
-				  ),
-				shadowColor: const Color(0x800038FF),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Recuperar Contraseña',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                    // Overlay de color (opcional)
+                    Positioned.fill(
+                      child: Container(
+                        color: const Color.fromRGBO(0, 0, 0, 0.05),
                       ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Correo Electrónico',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.email),
+                    ),
+
+                    Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/reset.svg',
+                              height: 160,
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFB2DBF7),
+                                    Color(0xFFF5F7FC),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 8,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 32),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'Recuperar Contraseña',
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF004AAD),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 25),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    child: TextField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Correo electrónico',
+                                        prefixIcon:
+                                            const Icon(Icons.email_outlined),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 25),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: SizedBox(
+                                      width: 150,
+                                      child: ElevatedButton.icon(
+                                        onPressed: _requestPasswordReset,
+                                        icon: const Icon(Icons.send),
+                                        label: const Text(
+                                          'Enviar',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              const Color(0xFF004AAD),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 18),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (_message.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        _message,
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        keyboardType: TextInputType.emailAddress,
                       ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _requestPasswordReset,
-                        style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all(const Color(0xFF004AAD)),
-                          minimumSize: WidgetStateProperty.all(Size(
-                              MediaQuery.of(context).size.width / 3,
-                              48)), // Ancho dinámico
-                          padding: WidgetStateProperty.all(
-                              const EdgeInsets.symmetric(vertical: 16)),
-                          shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          )),
-                        ),
-                        child: const Text(
-                          'Enviar',
-                          style: TextStyle(
-                            color: Colors.white, // Color del texto
-                            fontSize: 16, // Tamaño del texto
-                          ),
-                        ),
-                      ),
-                      if (_message.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            _message,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
