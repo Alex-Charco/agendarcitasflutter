@@ -49,12 +49,13 @@ class LoginViewState extends State<LoginView> {
 
     if (expired) {
       setState(() {
-        errorMessage = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
+        errorMessage =
+            'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
       });
       await prefs.remove('expiredSession');
     }
   }
-  
+
   Future<void> _loadLockoutState() async {
     final prefs = await SharedPreferences.getInstance();
     final endTimeStr = prefs.getString('lockoutEndTime');
@@ -164,7 +165,6 @@ class LoginViewState extends State<LoginView> {
       if (widget.httpClient == null) {
         client.close(); // ✅ Solo cerrar si lo creamos internamente
       }
-
     }
   }
 
@@ -185,257 +185,320 @@ class LoginViewState extends State<LoginView> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: SvgPicture.asset(
-                      "assets/images/background.svg",
-                      fit: BoxFit.cover,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: SvgPicture.asset(
+                        "assets/images/background.svg",
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  Positioned.fill(
-                    child: Container(
-                      color: const Color.fromRGBO(0, 0, 0, 0.05),
+                    Positioned.fill(
+                      child: Container(
+                        color: const Color.fromRGBO(0, 0, 0, 0.05),
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 420),
-                          child: Card(
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: const BorderSide(
-                                color: Color(0x4D0038FF),
-                                width: 4,
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60),
+                        child: Column(
+                          mainAxisAlignment:
+                              MainAxisAlignment.center, // Centrado vertical
+                          crossAxisAlignment:
+                              CrossAxisAlignment.center, // Centrado horizontal
+                          children: [
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 420),
+                              child: Card(
+                                elevation: 8,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: const BorderSide(
+                                    color: Color(0x4D0038FF),
+                                    width: 4,
+                                  ),
+                                ),
+                                shadowColor: const Color(0x800038FF),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16),
+                                        ),
+                                      ),
+                                      child: Image.asset(
+                                        "assets/images/logo.png",
+                                        height: 120,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFFB2DBF7),
+                                            Color(0xFFF5F7FC)
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(16),
+                                          bottomRight: Radius.circular(16),
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 24),
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextFormField(
+                                              controller: _usuarioController,
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    'Ingresar el usuario *',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 14,
+                                                ),
+                                                prefixIcon: Icon(Icons.person,
+                                                    color: Colors.grey[500]),
+                                                filled: true,
+                                                fillColor: Colors.white,
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade50),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Color(0xFF0629A5),
+                                                      width: 2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              validator: _validateUser,
+                                            ),
+                                            const SizedBox(height: 16),
+                                            TextFormField(
+                                              key: const Key('passwordField'),
+                                              controller: _passwordController,
+                                              obscureText: !_passwordVisible,
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    'Ingresar la contraseña *',
+                                                labelStyle: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 14,
+                                                ),
+                                                prefixIcon: Icon(Icons.lock,
+                                                    color: Colors.grey[500]),
+                                                filled: true,
+                                                fillColor: Colors.white,
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade50),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                      color: Color(0xFF0629A5),
+                                                      width: 2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    _passwordVisible
+                                                        ? Icons.visibility
+                                                        : Icons.visibility_off,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() =>
+                                                        _passwordVisible =
+                                                            !_passwordVisible);
+                                                  },
+                                                ),
+                                              ),
+                                              validator: _validatePassword,
+                                            ),
+                                            if (_errorMessage != null) ...[
+                                              const SizedBox(height: 12),
+                                              Text(_errorMessage!,
+                                                  style: const TextStyle(
+                                                      color: Colors.red)),
+                                            ],
+                                            if (errorMessage != null)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 12.0),
+                                                child: Text(
+                                                  errorMessage!,
+                                                  key: const Key(
+                                                      'expiredSessionMessage'),
+                                                  style: const TextStyle(
+                                                      color: Colors.red),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            if (_loginSuccess) ...[
+                                              const SizedBox(height: 12),
+                                              const Text(
+                                                "Inicio de sesión exitoso. Redirigiendo...",
+                                                style: TextStyle(
+                                                    color: Colors.green),
+                                              ),
+                                            ],
+                                            const SizedBox(height: 24),
+                                            Center(
+                                              child: SizedBox(
+                                                width:
+                                                    150, // Ajusta este valor al tamaño que desees
+                                                child: ElevatedButton(
+                                                  onPressed: _login,
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color.fromRGBO(
+                                                            6, 41, 165, 1),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 18),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'Ingresar',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Center(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    const Flexible(
+                                                      child: Text(
+                                                        '¿Olvidaste tu contraseña?: ',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Color(0xFF374151),
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      child: TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pushNamed(
+                                                              context,
+                                                              '/reset');
+                                                        },
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          minimumSize:
+                                                              const Size(0, 0),
+                                                          tapTargetSize:
+                                                              MaterialTapTargetSize
+                                                                  .shrinkWrap,
+                                                        ),
+                                                        child: const Text(
+                                                          'Recuperar contraseña',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    6,
+                                                                    41,
+                                                                    165,
+                                                                    1),
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            const Divider(),
+                                            const SizedBox(height: 4),
+                                            const Text(
+                                              "Sistema de Gestión Hospitalaria",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    6, 41, 165, 1),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            shadowColor: const Color(0x800038FF),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16),
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/logo.png",
-                                    height: 120,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFFB2DBF7),
-                                        Color(0xFFF5F7FC)
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(16),
-                                      bottomRight: Radius.circular(16),
-                                    ),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextFormField(
-                                          controller: _usuarioController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Ingresar el usuario *',
-                                            labelStyle: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontSize: 14,
-                                            ),
-                                            prefixIcon: Icon(Icons.person, color: Colors.grey[500]),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey.shade50),
-                                              borderRadius: BorderRadius.circular(15),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Color(0xFF0629A5), width: 2),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          validator: _validateUser,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        TextFormField(
-                                          key: const Key('passwordField'),
-                                          controller: _passwordController,
-                                          obscureText: !_passwordVisible,
-                                          decoration: InputDecoration(
-                                            labelText: 'Ingresar la contraseña *',
-                                            labelStyle: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontSize: 14,
-                                            ),
-                                            prefixIcon: Icon(Icons.lock, color: Colors.grey[500]),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey.shade50),
-                                              borderRadius: BorderRadius.circular(15),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Color(0xFF0629A5), width: 2),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            suffixIcon: IconButton(
-                                              icon: Icon(
-                                                _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                                color: Colors.grey[600],
-                                              ),
-                                              onPressed: () {
-                                                setState(() => _passwordVisible = !_passwordVisible);
-                                              },
-                                            ),
-                                          ),
-                                          validator: _validatePassword,
-                                        ),
-                                        if (_errorMessage != null) ...[
-                                          const SizedBox(height: 12),
-                                          Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-                                        ],
-                                        if (errorMessage != null)
-                                          Padding(
-                                            padding: const EdgeInsets.only(bottom: 12.0),
-                                            child: Text(
-                                              errorMessage!,
-                                              key: const Key('expiredSessionMessage'),
-                                              style: const TextStyle(color: Colors.red),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        if (_loginSuccess) ...[
-                                          const SizedBox(height: 12),
-                                          const Text(
-                                            "Inicio de sesión exitoso. Redirigiendo...",
-                                            style: TextStyle(color: Colors.green),
-                                          ),
-                                        ],
-                                        const SizedBox(height: 24),
-                                        Center(
-                                          child: SizedBox(
-                                            width: 150, // Ajusta este valor al tamaño que desees
-                                            child: ElevatedButton(
-                                              onPressed: _login,
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: const Color.fromRGBO(6, 41, 165, 1),
-                                                padding: const EdgeInsets.symmetric(vertical: 18),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(15),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Ingresar',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 8.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                const Flexible(
-                                                  child: Text(
-                                                    '¿Olvidaste tu contraseña?: ',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Color(0xFF374151),
-                                                    ),
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  child: TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pushNamed(context, '/reset');
-                                                    },
-                                                    style: TextButton.styleFrom(
-                                                      padding: EdgeInsets.zero,
-                                                      minimumSize: const Size(0, 0),
-                                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                    ),
-                                                    child: const Text(
-                                                      'Recuperar contraseña',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Color.fromRGBO(6, 41, 165, 1),
-                                                      ),
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        const Divider(),
-                                        const SizedBox(height: 4),
-                                        const Text(
-                                          "Sistema de Gestión Hospitalaria",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Color.fromRGBO(6, 41, 165, 1),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
