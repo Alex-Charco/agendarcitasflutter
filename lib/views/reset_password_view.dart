@@ -54,6 +54,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
           "Si el correo está registrado, recibirás un enlace.";
 
       CustomAlert.showSuccessDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         title: "Solicitud enviada",
         message: message,
@@ -66,6 +67,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       );
     } catch (e) {
       CustomAlert.showErrorDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         title: "Error",
         message:
@@ -185,24 +187,32 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
                                     padding: const EdgeInsets.only(bottom: 20),
                                     child: SizedBox(
                                       width: 150,
-                                      child: ElevatedButton.icon(
+                                      child: ElevatedButton(
+                                        key: const Key('send_reset_button'),
                                         onPressed: _requestPasswordReset,
-                                        icon: const Icon(Icons.send),
-                                        label: const Text(
+                                         style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color.fromRGBO(
+                                                            6, 41, 165, 1),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 18),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
                                           'Enviar',
-                                          style: TextStyle(fontSize: 16),
+                                          style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                    ),
                                         ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF004AAD),
-                                          foregroundColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 18),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
+                                        
                                       ),
                                     ),
                                   ),
