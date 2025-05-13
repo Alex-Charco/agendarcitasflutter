@@ -8,7 +8,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ResetPasswordView extends StatefulWidget {
-  const ResetPasswordView({super.key});
+   final http.Client? httpClient;
+
+  const ResetPasswordView({super.key, this.httpClient});
 
   @override
   ResetPasswordViewState createState() => ResetPasswordViewState();
@@ -43,7 +45,8 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
     }
 
     try {
-      final response = await http.post(
+      final response = await (widget.httpClient ?? http.Client()).post(
+
         Uri.parse(urlReset),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
