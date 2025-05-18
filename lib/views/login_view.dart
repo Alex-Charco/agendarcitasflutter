@@ -113,36 +113,47 @@ class LoginViewState extends State<LoginView> {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['token'] != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', data['token']);
-        await prefs.setInt('rol', data['user']['rol']['id_rol']);
-        await prefs.setString('identificacion', data['user']['identificacion']);
-        await prefs.setString('user', jsonEncode(data['user']));
-        await prefs.remove('lockoutEndTime');
-        await prefs.setBool('expiredSession', true);
+        final idRol = data['user']['rol']['id_rol'];
 
-        setState(() {
-          _loginSuccess = true;
-          _failedAttempts = 0;
-          _lockoutEndTime = null;
-        });
+        if (idRol == 1) {
+          // Solo pacientes pueden continuar
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', data['token']);
+          await prefs.setInt('rol', idRol);
+          await prefs.setString(
+              'identificacion', data['user']['identificacion']);
+          await prefs.setString('user', jsonEncode(data['user']));
+          await prefs.remove('lockoutEndTime');
 
-        Timer(const Duration(seconds: 1), () {
-          if (!context.mounted) return;
+          setState(() {
+            _loginSuccess = true;
+            _failedAttempts = 0;
+            _lockoutEndTime = null;
+            _errorMessage = null;
+          });
 
-          final idRol = data['user']['rol']['id_rol'];
+          Timer(const Duration(seconds: 1), () {
+            if (!context.mounted) return;
 
-          if (widget.onLoginSuccess != null) {
-            widget.onLoginSuccess!(context, idRol); // 👉 usado en test
-          } else {
-            Navigator.pushReplacementNamed(
-              // 👉 usado en producción
-              context,
-              idRol == 1 ? '/home' : '/dashboard',
-            );
-          }
-        });
+            if (widget.onLoginSuccess != null) {
+              widget.onLoginSuccess!(context, idRol);
+            } else {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+          });
+        } else {
+          // Si no es paciente, mostrar mensaje de error
+          setState(() {
+            _errorMessage =
+                "Solo los pacientes pueden ingresar en esta aplicación.";
+            _failedAttempts++;
+            if (_failedAttempts >= _maxFailedAttempts) {
+              _setLockout();
+            }
+          });
+        }
       } else {
+        // El resto del código actual para errores
         setState(() {
           _failedAttempts++;
           if (_failedAttempts >= _maxFailedAttempts) {

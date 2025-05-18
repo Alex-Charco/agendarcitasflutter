@@ -1,48 +1,69 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../widgets/custom_drawer.dart';import '../pages/consulta_cita_paciente_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/user_initials_avatar.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
+  String? firstName;
+  String? lastName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final userMap = jsonDecode(userJson);
+      setState(() {
+        firstName = userMap['primer_nombre'] ?? '';
+        lastName = userMap['primer_apellido'] ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      drawer: const CustomDrawer(),
       appBar: AppBar(
-        title: const Text('Agendamiento de citas médicas'),
-      ),
-      drawer: const CustomDrawer(), // ✅ Aquí llamas tu Drawer separado
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Semantics(
-                label: 'Mensaje de bienvenida',
-                child: const Text(
-                  'Bienvenido a la página principal', 
-                  key: Key('welcome-text'),
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ConsultaCitaPacientePage(),
-                    ),
-                  );
-                },
-                child: const Text('Consultar Cita'),
-              ),
-            ],
+        backgroundColor: const Color.fromARGB(255, 251, 252, 253),
+        elevation: 2,
+        centerTitle: true,
+        title: const Text(
+          'MiliSalud 17',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: UserInitialsAvatar(
+              firstName: firstName,
+              lastName: lastName,
+            ),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          'Bienvenido a MiliSalud 17',
+          style: TextStyle(fontSize: 20, color: Colors.black),
+          textAlign: TextAlign.center,
         ),
       ),
     );

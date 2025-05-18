@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:agendarcitasflutter/pages/consulta_cita_paciente_page.dart';
+import 'package:agendarcitasflutter/widgets/user_initials_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/perfil_page.dart';
@@ -13,6 +15,8 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   String? nombrePaciente;
   String? nombreRol;
+  String? primerNombre;       // ✅ Mover aquí
+  String? primerApellido;     // ✅ Mover aquí
 
   @override
   void initState() {
@@ -25,14 +29,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
     String? userJson = prefs.getString('user');
     if (userJson != null) {
       final Map<String, dynamic> userMap = jsonDecode(userJson);
-      final String primerNombre = userMap['primer_nombre'] ?? '';
+      final String primerNombreLocal = userMap['primer_nombre'] ?? '';
       final String segundoNombre = userMap['segundo_nombre'] ?? '';
-      final String primerApellido = userMap['primer_apellido'] ?? '';
+      final String primerApellidoLocal = userMap['primer_apellido'] ?? '';
       final String segundoApellido = userMap['segundo_apellido'] ?? '';
 
-      final String nombreCompleto = '$primerNombre $segundoNombre $primerApellido $segundoApellido'.trim();
+      final String nombreCompleto = '$primerNombreLocal $segundoNombre $primerApellidoLocal $segundoApellido'.trim();
 
       setState(() {
+        primerNombre = primerNombreLocal;
+        primerApellido = primerApellidoLocal;
         nombrePaciente = nombreCompleto;
         nombreRol = userMap['rol']?['nombre_rol'] ?? '';
       });
@@ -46,14 +52,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(nombrePaciente ?? 'Paciente28'),
+            accountName: Text(nombrePaciente ?? 'Paciente'),
             accountEmail: Text(nombreRol ?? 'Paciente'),
-            currentAccountPicture: const CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.blue),
+            currentAccountPicture: UserInitialsAvatar(
+              firstName: primerNombre ?? '',
+              lastName: primerApellido ?? '',
             ),
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Color.fromARGB(255, 0, 74, 173),
             ),
           ),
           ListTile(
@@ -74,6 +80,40 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.contact_mail),
+            title: const Text('Contacto'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ConsultaCitaPacientePage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.search),
+            title: const Text('Consultar Cita'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ConsultaCitaPacientePage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_circle_outline),
+            title: const Text('Crear Cita'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ConsultaCitaPacientePage()),
+              );
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar sesión'),
