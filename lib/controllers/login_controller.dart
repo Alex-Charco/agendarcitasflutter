@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:agendarcitasflutter/services/auth_service.dart';
 
 class LoginController {
   final BuildContext context;
@@ -13,12 +14,13 @@ class LoginController {
 
   int failedAttempts = 0;
   DateTime? lockoutEndTime;
+  final AuthService authService;
 
   LoginController({
     required this.context,
     required this.client,
     this.onLoginSuccess,
-  });
+  }) : authService = AuthService(client: client);
 
   /// Carga el estado de bloqueo desde SharedPreferences.
   Future<void> loadLockoutState() async {
@@ -55,18 +57,13 @@ class LoginController {
     required ValueSetter<String?> onError,
   }) async {
     try {
-      final response = await client.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'nombre_usuario': username,
-          'password': password,
-        }),
+      final data = await authService.login(
+        urlLogin: url,
+        username: username,
+        password: password,
       );
 
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && data['token'] != null) {
+      if (data['token'] != null) {
         final idRol = data['user']['rol']['id_rol'];
         if (idRol == 1) {
           await _handleSuccessfulLogin(data, idRol, onLoginSuccessSet, onError);
@@ -82,8 +79,8 @@ class LoginController {
           data['message'] ?? 'Error desconocido',
         );
       }
-    } catch (_) {
-      _handleFailedLogin(onError, 'Error de conexión');
+    } catch (e) {
+      _handleFailedLogin(onError, e.toString());
     }
   }
 

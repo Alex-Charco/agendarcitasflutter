@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:agendarcitasflutter/utils/validators.dart';
 
 class LoginView extends StatefulWidget {
   final http.Client? httpClient;
@@ -103,21 +104,6 @@ class LoginViewState extends State<LoginView> {
     );
   }
 
-  String? _validateUser(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Ingrese su usuario';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Ingrese su contraseña';
-    } else if (value.length < 10) {
-      return 'La contraseña debe tener al menos 10 caracteres';
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +221,7 @@ class LoginViewState extends State<LoginView> {
                                                       BorderRadius.circular(8),
                                                 ),
                                               ),
-                                              validator: _validateUser,
+                                              validator: Validators.validateUser,
                                             ),
                                             const SizedBox(height: 16),
                                             TextFormField(
@@ -283,7 +269,7 @@ class LoginViewState extends State<LoginView> {
                                                   },
                                                 ),
                                               ),
-                                              validator: _validatePassword,
+                                              validator: Validators.validatePassword,
                                             ),
                                             if (_errorMessage != null) ...[
                                               const SizedBox(height: 12),

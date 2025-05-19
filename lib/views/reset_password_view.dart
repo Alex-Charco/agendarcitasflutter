@@ -1,14 +1,14 @@
 import 'package:agendarcitasflutter/widgets/custom_alert.dart';
 import 'package:agendarcitasflutter/utils/validators.dart';
 import 'package:agendarcitasflutter/views/login_view.dart';
+import 'package:agendarcitasflutter/services/auth_service.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ResetPasswordView extends StatefulWidget {
-   final http.Client? httpClient;
+  final http.Client? httpClient;
 
   const ResetPasswordView({super.key, this.httpClient});
 
@@ -19,6 +19,13 @@ class ResetPasswordView extends StatefulWidget {
 class ResetPasswordViewState extends State<ResetPasswordView> {
   final TextEditingController _emailController = TextEditingController();
   final String _message = "";
+  late final AuthService _authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = AuthService(client: widget.httpClient);
+  }
 
   Future<void> _requestPasswordReset() async {
     final urlReset = dotenv.env['API_URL_RESET'];
@@ -45,15 +52,12 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
     }
 
     try {
-      final response = await (widget.httpClient ?? http.Client()).post(
-
-        Uri.parse(urlReset),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email}),
+      final response = await _authService.resetPassword(
+        email: email,
+        urlReset: urlReset,
       );
 
-      final data = jsonDecode(response.body);
-      final message = data['message'] ??
+      final message = response['message'] ??
           "Si el correo está registrado, recibirás un enlace.";
 
       CustomAlert.showSuccessDialog(
@@ -78,7 +82,7 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       );
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,8 +148,8 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
                                 children: [
                                   Container(
                                     width: double.infinity,
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 32),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 32),
                                     decoration: const BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -193,29 +197,23 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
                                       child: ElevatedButton(
                                         key: const Key('send_reset_button'),
                                         onPressed: _requestPasswordReset,
-                                         style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        const Color.fromRGBO(
-                                                            6, 41, 165, 1),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 18),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                    ),
-                                                  ),
-                                                  child: const Text(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromRGBO(
+                                              6, 41, 165, 1),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 18),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        child: const Text(
                                           'Enviar',
                                           style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white,
-                                                    ),
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                        
                                       ),
                                     ),
                                   ),
