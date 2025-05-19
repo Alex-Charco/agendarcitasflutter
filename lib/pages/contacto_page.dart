@@ -1,3 +1,4 @@
+import 'package:agendarcitasflutter/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
 
@@ -15,20 +16,17 @@ class ContactoPage extends StatelessWidget {
         centerTitle: true,
         title: const Text(
           'Contáctanos',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              const SizedBox(height: 20),
-              _glassCard(
-                children: const [
+              SizedBox(height: 20),
+              GlassCard(
+                children: [
                   Text(
                     'Hospital de Brigada de Selva No.17 “Pastaza”',
                     style: TextStyle(
@@ -55,37 +53,12 @@ class ContactoPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30),
             ],
           ),
         ),
       ),
       bottomNavigationBar: const Footer(),
-    );
-  }
-
-  static Widget _glassCard({required List<Widget> children}) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          )
-        ],
-        border: Border.all(color: Colors.white70, width: 1.2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
     );
   }
 }
