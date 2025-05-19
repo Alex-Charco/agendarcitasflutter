@@ -1,7 +1,7 @@
 import 'package:agendarcitasflutter/pages/consulta_cita_paciente_page.dart';
+import 'package:agendarcitasflutter/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:agendarcitasflutter/views/login_view.dart';
-import 'package:agendarcitasflutter/views/home_view.dart';
 import 'package:agendarcitasflutter/views/reset_password_view.dart';
 
 class AppRoutes {

@@ -5,8 +5,11 @@ class BannerButton {
   final String link;
   final String variant;
 
-  BannerButton(
-      {required this.text, required this.link, this.variant = "primary"});
+  BannerButton({
+    required this.text,
+    required this.link,
+    this.variant = "primary",
+  });
 }
 
 class BannerWidget extends StatelessWidget {
@@ -45,60 +48,62 @@ class BannerWidget extends StatelessWidget {
             child: Container(color: Colors.blue.shade900.withOpacity(0.5)),
           ),
 
-          // Contenido
+          // Contenido centrado y scrollable
           Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: screenWidth < 600 ? 24 : 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            child: SingleChildScrollView( // <- Aquí el cambio clave
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: screenWidth < 600 ? 24 : 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: screenWidth < 600 ? 16 : 18,
-                      color: Colors.white,
+                    const SizedBox(height: 12),
+                    Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: screenWidth < 600 ? 16 : 18,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    alignment: WrapAlignment.center,
-                    children: buttons.map((btn) {
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: btn.variant == "primary"
-                              ? const Color.fromARGB(255, 0, 74, 173)
-                              : Colors.grey[300],
-                          foregroundColor: btn.variant == "primary"
-                              ? Colors.white
-                              : Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 24),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      alignment: WrapAlignment.center,
+                      children: buttons.map((btn) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: btn.variant == "primary"
+                                ? const Color.fromARGB(255, 0, 74, 173)
+                                : Colors.grey[300],
+                            foregroundColor: btn.variant == "primary"
+                                ? Colors.white
+                                : Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16,
+                            ),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, btn.link);
-                        },
-                        child: Text(btn.text),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                          onPressed: () {
+                            Navigator.pushNamed(context, btn.link);
+                          },
+                          child: Text(btn.text),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
