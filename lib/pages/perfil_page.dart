@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/footer_widget.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
@@ -59,26 +60,14 @@ class _PerfilPageState extends State<PerfilPage> {
       backgroundColor: const Color.fromARGB(255, 243, 244, 246),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Mi Perfil',
           style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
-              fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF90C0E8),
-                Color.fromARGB(255, 151, 203, 246),
-                Color(0xFFF5F7FC),
-              ],
-            ),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
       ),
@@ -93,7 +82,8 @@ class _PerfilPageState extends State<PerfilPage> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
+                      color:
+                          Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     )
@@ -148,10 +138,12 @@ class _PerfilPageState extends State<PerfilPage> {
                   ),
                 ],
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 
@@ -194,10 +186,10 @@ class _PerfilPageState extends State<PerfilPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 4),

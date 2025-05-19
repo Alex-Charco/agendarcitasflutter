@@ -43,7 +43,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: const Color.fromARGB(255, 243, 244, 246),
       drawer: const CustomDrawer(),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 251, 252, 253),
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245),
         elevation: 2,
         centerTitle: true,
         title: const Text(
@@ -78,7 +78,7 @@ class _HomeViewState extends State<HomeView> {
                       BannerButton(
                           text: 'Agendar cita', link: '/registrar_cita'),
                       BannerButton(
-                          text: 'Consuktar cita',
+                          text: 'Consultar cita',
                           link: '/consultar_cita',
                           variant: 'secondary'),
                     ],

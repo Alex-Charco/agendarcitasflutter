@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart';
 
 class ContactoPage extends StatelessWidget {
   const ContactoPage({super.key});
@@ -9,24 +10,14 @@ class ContactoPage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 243, 244, 246),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Contáctanos',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF90C0E8),
-                Color(0xFF97CBF6),
-                Color(0xFFF5F7FC),
-              ],
-            ),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
       ),
@@ -64,10 +55,12 @@ class ContactoPage extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 
@@ -78,10 +71,10 @@ class ContactoPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
             blurRadius: 10,
             spreadRadius: 2,
             offset: const Offset(0, 4),
