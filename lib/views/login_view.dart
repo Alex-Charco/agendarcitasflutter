@@ -1,16 +1,14 @@
 import 'dart:async';
+import 'package:agendarcitasflutter/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginView extends StatefulWidget {
   final http.Client? httpClient;
-  final void Function(BuildContext context, int idRol)?
-      onLoginSuccess; // 👈 nuevo
-
+  final void Function(BuildContext context, int idRol)? onLoginSuccess;
   const LoginView({
     super.key,
     this.httpClient,
@@ -29,17 +27,20 @@ class LoginViewState extends State<LoginView> {
   bool _passwordVisible = false;
   String? _errorMessage;
   bool _loginSuccess = false;
-  int _failedAttempts = 0;
   String? errorMessage;
 
-  final int _maxFailedAttempts = 3;
-  final int _lockoutMinutes = 15;
   DateTime? _lockoutEndTime;
+  late LoginController _controller;
 
   @override
   void initState() {
     super.initState();
-    _loadLockoutState();
+    _controller = LoginController(
+      context: context,
+      client: widget.httpClient ?? http.Client(),
+      onLoginSuccess: widget.onLoginSuccess,
+    );
+    _controller.loadLockoutState();
     checkExpiredSession();
   }
 
@@ -56,39 +57,13 @@ class LoginViewState extends State<LoginView> {
     }
   }
 
-  Future<void> _loadLockoutState() async {
-    final prefs = await SharedPreferences.getInstance();
-    final endTimeStr = prefs.getString('lockoutEndTime');
-    if (endTimeStr != null) {
-      final lockoutEnd = DateTime.tryParse(endTimeStr);
-      if (lockoutEnd != null && lockoutEnd.isAfter(DateTime.now())) {
-        setState(() => _lockoutEndTime = lockoutEnd);
-      } else {
-        await prefs.remove('lockoutEndTime');
-      }
-    }
-  }
-
-  Future<void> _setLockout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lockoutEnd = DateTime.now().add(Duration(minutes: _lockoutMinutes));
-    await prefs.setString('lockoutEndTime', lockoutEnd.toIso8601String());
-    setState(() {
-      _lockoutEndTime = lockoutEnd;
-      _errorMessage =
-          'Has superado el número máximo de intentos. Tu cuenta se ha bloqueado por 15 minutos.';
-    });
-  }
-
   Future<void> _login() async {
-    final url = dotenv.env['API_URL'];
-    if (url == null) return;
     if (!_formKey.currentState!.validate()) return;
 
     if (_lockoutEndTime != null && DateTime.now().isBefore(_lockoutEndTime!)) {
       setState(() {
         _errorMessage =
-            'Has superado el número máximo de intentos. Tu cuenta está bloqueada hasta las ${_lockoutEndTime!.hour.toString().padLeft(2, '0')}:${_lockoutEndTime!.minute.toString().padLeft(2, '0')}.';
+            'Has superado el número máximo de intentos. Tu cuenta está bloqueada hasta las ${_lockoutEndTime!.hour.toString().padLeft(2, '0')}:${_lockoutEndTime!.minute.toString().padLeft(2, '0')}';
       });
       return;
     }
@@ -98,85 +73,34 @@ class LoginViewState extends State<LoginView> {
       _loginSuccess = false;
     });
 
-    final client = widget.httpClient ?? http.Client();
+    final url = dotenv.env['API_URL'];
+    if (url == null) return;
 
-    try {
-      final response = await client.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'nombre_usuario': _usuarioController.text.trim(),
-          'password': _passwordController.text.trim(),
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && data['token'] != null) {
-        final idRol = data['user']['rol']['id_rol'];
-
-        if (idRol == 1) {
-          // Solo pacientes pueden continuar
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', data['token']);
-          await prefs.setInt('rol', idRol);
-          await prefs.setString(
-              'identificacion', data['user']['identificacion']);
-          await prefs.setString('user', jsonEncode(data['user']));
-          await prefs.remove('lockoutEndTime');
-
-          setState(() {
-            _loginSuccess = true;
-            _failedAttempts = 0;
-            _lockoutEndTime = null;
-            _errorMessage = null;
-          });
-
-          Timer(const Duration(seconds: 1), () {
-            if (!context.mounted) return;
-
-            if (widget.onLoginSuccess != null) {
-              widget.onLoginSuccess!(context, idRol);
-            } else {
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-          });
-        } else {
-          // Si no es paciente, mostrar mensaje de error
-          setState(() {
-            _errorMessage =
-                "Solo los pacientes pueden ingresar en esta aplicación.";
-            _failedAttempts++;
-            if (_failedAttempts >= _maxFailedAttempts) {
-              _setLockout();
-            }
-          });
-        }
-      } else {
-        // El resto del código actual para errores
+    await _controller.login(
+      url: url,
+      username: _usuarioController.text.trim(),
+      password: _passwordController.text.trim(),
+      onLoginSuccessSet: (bool success) {
         setState(() {
-          _failedAttempts++;
-          if (_failedAttempts >= _maxFailedAttempts) {
-            _setLockout();
+          _loginSuccess = success;
+          _errorMessage = null;
+        });
+
+        Timer(const Duration(seconds: 1), () {
+          if (!context.mounted) return;
+
+          if (widget.onLoginSuccess != null) {
+            widget.onLoginSuccess!(
+                context, 1); // Pasa el idRol real aquí si lo tienes
           } else {
-            _errorMessage = data['message'] ?? 'Error desconocido';
+            Navigator.pushReplacementNamed(context, '/home');
           }
         });
-      }
-    } catch (_) {
-      setState(() {
-        _failedAttempts++;
-        if (_failedAttempts >= _maxFailedAttempts) {
-          _setLockout();
-        } else {
-          _errorMessage = 'Error de conexión';
-        }
-      });
-    } finally {
-      if (widget.httpClient == null) {
-        client.close(); // ✅ Solo cerrar si lo creamos internamente
-      }
-    }
+      },
+      onError: (String? message) {
+        setState(() => _errorMessage = message);
+      },
+    );
   }
 
   String? _validateUser(String? value) {
