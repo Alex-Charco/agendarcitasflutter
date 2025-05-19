@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:agendarcitasflutter/pages/ContactanosPage.dart';
 import 'package:agendarcitasflutter/pages/consulta_cita_paciente_page.dart';
 import 'package:agendarcitasflutter/widgets/user_initials_avatar.dart';
 import 'package:flutter/material.dart';
@@ -63,14 +64,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.home),
+            leading: const Icon(Icons.home, color: Color(0xFF1565C0)),
             title: const Text('Inicio'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: const Icon(Icons.person, color: Color(0xFF6A1B9A)),
             title: const Text('Perfil'),
             onTap: () {
               Navigator.pop(context);
@@ -81,8 +82,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.contact_mail),
-            title: const Text('Contacto'),
+            leading: const Icon(Icons.add_circle_outline, color: Color(0xFF00897B)),
+            title: const Text('Agendar Cita'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -92,7 +93,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.search),
+            leading: const Icon(Icons.search,  color: Color(0xFFF9A825)),
             title: const Text('Consultar Cita'),
             onTap: () {
               Navigator.pop(context);
@@ -103,19 +104,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.add_circle_outline),
-            title: const Text('Crear Cita'),
+            leading: const Icon(Icons.contact_mail, color: Color(0xFFEF6C00)),
+            title: const Text('Contacto'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ConsultaCitaPacientePage()),
+                MaterialPageRoute(builder: (context) => const ContactanosPage()),
               );
             },
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.logout),
+            leading: const Icon(Icons.logout, color: Colors.red ),
             title: const Text('Cerrar sesión'),
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();

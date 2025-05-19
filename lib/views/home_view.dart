@@ -98,16 +98,16 @@ class _HomeViewState extends State<HomeView> {
                           children: List.generate(2, (index) {
                             final data = [
                               {
-                                'icon': const Icon(Icons.calendar_month_sharp,
+                                'icon': const Icon(Icons.add_circle_outline, 
                                     size: 40,
-                                    color: Color.fromARGB(255, 13, 71, 161)),
+                                    color: Color(0xFF00897B)),
                                 'title': 'Agendar Citas',
                                 'desc':
                                     'Reserva citas de forma fácil. Seleccione una fecha, hora, especialidad y médico para su consulta.',
                               },
                               {
                                 'icon': const Icon(Icons.search_sharp,
-                                    size: 40, color: Colors.green),
+                                    size: 40, color: Color(0xFFF9A825)),
                                 'title': 'Consultar Citas',
                                 'desc':
                                     'Consulta el historial de tus citas médicas y accede a los detalles de cada una en cualquier momento.',
