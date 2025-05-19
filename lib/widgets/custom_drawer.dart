@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:agendarcitasflutter/pages/ContactanosPage.dart';
+import 'package:agendarcitasflutter/pages/contacto_page.dart';
 import 'package:agendarcitasflutter/pages/consulta_cita_paciente_page.dart';
 import 'package:agendarcitasflutter/widgets/user_initials_avatar.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +110,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ContactanosPage()),
+                MaterialPageRoute(builder: (context) => const ContactoPage()),
               );
             },
           ),

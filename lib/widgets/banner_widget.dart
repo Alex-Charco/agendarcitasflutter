@@ -45,7 +45,7 @@ class BannerWidget extends StatelessWidget {
 
           // Capa azul con opacidad
           Positioned.fill(
-            child: Container(color: Colors.blue.shade900.withOpacity(0.5)),
+            child: Container(color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),),
           ),
 
           // Contenido centrado y scrollable

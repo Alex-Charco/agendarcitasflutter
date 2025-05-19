@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ContactanosPage extends StatelessWidget {
-  const ContactanosPage({super.key});
+class ContactoPage extends StatelessWidget {
+  const ContactoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class ContactanosPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white.withOpacity(0.75),
+        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,

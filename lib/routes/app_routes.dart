@@ -1,4 +1,4 @@
-import 'package:agendarcitasflutter/pages/ContactanosPage.dart';
+import 'package:agendarcitasflutter/pages/contacto_page.dart';
 import 'package:agendarcitasflutter/pages/consulta_cita_paciente_page.dart';
 import 'package:agendarcitasflutter/views/home_view.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +18,15 @@ class AppRoutes {
     switch (routeName) {
       case login:
         return MaterialPageRoute(builder: (_) => const LoginView());
-	  case home:
+      case home:
         return MaterialPageRoute(builder: (_) => const HomeView());
-	  case reset:
+      case reset:
         return MaterialPageRoute(builder: (_) => const ResetPasswordView());
-    case cita:
-        return MaterialPageRoute(builder: (_) => const ConsultaCitaPacientePage());
-    case contacto:
-        return MaterialPageRoute(builder: (_) => const ContactanosPage());
+      case cita:
+        return MaterialPageRoute(
+            builder: (_) => const ConsultaCitaPacientePage());
+      case contacto:
+        return MaterialPageRoute(builder: (_) => const ContactoPage());
       default:
         return MaterialPageRoute(builder: (_) => const LoginView());
     }

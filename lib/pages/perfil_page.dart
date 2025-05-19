@@ -93,7 +93,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.indigo.withOpacity(0.3),
+                      color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     )
@@ -194,7 +194,7 @@ class _PerfilPageState extends State<PerfilPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white.withOpacity(0.75),
+        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,
