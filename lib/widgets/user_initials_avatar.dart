@@ -9,14 +9,14 @@ class UserInitialsAvatar extends StatelessWidget {
   final double fontSize;
 
   const UserInitialsAvatar({
-    Key? key,
+    super.key,
     required this.firstName,
     required this.lastName,
     this.radius = 20,
     this.backgroundColor = Colors.white,
     this.textColor = Colors.blue,
     this.fontSize = 20,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

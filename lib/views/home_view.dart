@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/user_initials_avatar.dart';
+import '../widgets/banner_widget.dart'; // ✅ Importa el Banner
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -59,11 +60,30 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: const Center(
-        child: Text(
-          'Bienvenido a MiliSalud 17',
-          style: TextStyle(fontSize: 20, color: Colors.black),
-          textAlign: TextAlign.center,
+
+      // ✅ Nuevo contenido del body
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            BannerWidget(
+              title: 'Bienvenido a MiliSalud 17',
+              description: 'Tu salud es nuestra prioridad',
+              imageUrl: 'assets/images/hospital-banner.jpg',
+              buttons: [
+                BannerButton(text: 'Agendar cita', link: '/registrar_cita'),
+                BannerButton(
+                    text: 'Ver cita',
+                    link: '/consultar_cita',
+                    variant: 'secondary'),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Bienvenido a MiliSalud 17',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
