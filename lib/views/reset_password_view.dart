@@ -1,7 +1,8 @@
 import 'package:agendarcitasflutter/widgets/custom_alert.dart';
 import 'package:agendarcitasflutter/utils/validators.dart';
 import 'package:agendarcitasflutter/views/login_view.dart';
-import 'package:agendarcitasflutter/services/auth_service.dart'; 
+import 'package:agendarcitasflutter/services/auth_service.dart';
+import 'package:agendarcitasflutter/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,11 +35,8 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      CustomAlert.showErrorDialog(
-        context: context,
-        title: "Campo vacío",
-        message: "Por favor ingresa un correo electrónico.",
-      );
+      showErrorDialog(
+          context, "Campo vacío", "Por favor ingresa un correo electrónico.");
       return;
     }
 
@@ -60,11 +58,11 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
       final message = response['message'] ??
           "Si el correo está registrado, recibirás un enlace.";
 
-      CustomAlert.showSuccessDialog(
+      showSuccessDialog(
         // ignore: use_build_context_synchronously
-        context: context,
-        title: "Solicitud enviada",
-        message: message,
+        context,
+        "Solicitud enviada",
+        message,
         onConfirm: () {
           Navigator.pushReplacement(
             context,
@@ -73,16 +71,15 @@ class ResetPasswordViewState extends State<ResetPasswordView> {
         },
       );
     } catch (e) {
-      CustomAlert.showErrorDialog(
+      showErrorDialog(
         // ignore: use_build_context_synchronously
-        context: context,
-        title: "Error",
-        message:
-            "No se pudo completar la solicitud. Verifica tu conexión e intenta nuevamente.",
+        context,
+        "Error",
+        "No se pudo completar la solicitud. Verifica tu conexión e intenta nuevamente.",
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
