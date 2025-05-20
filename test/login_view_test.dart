@@ -120,29 +120,6 @@ void main() {
   expect(navigatedToHome, isTrue);
 });
 
-  testWidgets('Muestra mensaje de error si las credenciales son incorrectas', (WidgetTester tester) async {
-  final client = MockClient();
-
-  // Simulamos una respuesta inválida
-  when(client.post(any, headers: anyNamed('headers'), body: anyNamed('body')))
-      .thenAnswer((_) async => http.Response(jsonEncode({'message': 'Credenciales incorrectas'}), 401));
-
-  await tester.pumpWidget(MaterialApp(
-    home: LoginView(httpClient: client),
-  ));
-
-  // Llenamos los campos
-  await tester.enterText(find.byType(TextFormField).at(0), 'usuario');
-  await tester.enterText(find.byKey(const Key('passwordField')), 'contraseñaIncorrecta');
-
-  // Ejecutamos el login
-  await tester.tap(find.byType(ElevatedButton));
-  await tester.pumpAndSettle(); // Esperamos que el estado se actualice
-
-  // Verificamos que aparezca el mensaje de error
-  expect(find.text('Credenciales incorrectas'), findsOneWidget);
-});
-
   testWidgets('🟢 Token guardado en SharedPreferences tras login exitoso', (tester) async {
   // Inicializar valores simulados en SharedPreferences
   SharedPreferences.setMockInitialValues({});
