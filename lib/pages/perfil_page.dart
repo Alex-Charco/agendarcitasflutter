@@ -1,6 +1,8 @@
-import 'dart:convert';
+import 'package:agendarcitasflutter/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/footer_widget.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
@@ -25,12 +27,10 @@ class _PerfilPageState extends State<PerfilPage> {
     String? userJson = prefs.getString('user');
     if (userJson != null) {
       final Map<String, dynamic> userMap = jsonDecode(userJson);
-
       final String primerNombre = userMap['primer_nombre'] ?? '';
       final String segundoNombre = userMap['segundo_nombre'] ?? '';
       final String primerApellido = userMap['primer_apellido'] ?? '';
       final String segundoApellido = userMap['segundo_apellido'] ?? '';
-
       setState(() {
         userData = userMap;
         nombreCompleto =
@@ -59,27 +59,12 @@ class _PerfilPageState extends State<PerfilPage> {
       backgroundColor: const Color.fromARGB(255, 243, 244, 246),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Mi Perfil',
-          style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
-              fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF90C0E8),
-                Color.fromARGB(255, 151, 203, 246),
-                Color(0xFFF5F7FC),
-              ],
-            ),
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
       body: SafeArea(
@@ -88,27 +73,15 @@ class _PerfilPageState extends State<PerfilPage> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    )
-                  ],
-                ),
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: const Color.fromARGB(255, 0, 74, 173),
-                  child: Text(
-                    iniciales,
-                    style: const TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: const Color.fromARGB(255, 0, 74, 173),
+                child: Text(
+                  iniciales,
+                  style: const TextStyle(
+                    fontSize: 36,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -120,38 +93,28 @@ class _PerfilPageState extends State<PerfilPage> {
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                   color: Colors.indigo,
-                  fontFamily: 'Roboto',
                 ),
               ),
               const SizedBox(height: 30),
-              _glassCard(
+              GlassCard(
                 children: [
-                  _buildInfoRow(
-                    'Usuario',
-                    userData!['nombre_usuario'],
-                    icon: Icons.person,
-                    iconColor: Colors.indigo,
-                  ),
+                  _buildInfoRow('Usuario', userData!['nombre_usuario'],
+                      icon: Icons.person, iconColor: Colors.indigo),
                   const Divider(),
-                  _buildInfoRow(
-                    'Identificación',
-                    userData!['identificacion'],
-                    icon: Icons.badge,
-                    iconColor: Colors.teal,
-                  ),
+                  _buildInfoRow('Identificación', userData!['identificacion'],
+                      icon: Icons.badge, iconColor: Colors.teal),
                   const Divider(),
-                  _buildInfoRow(
-                    'Rol',
-                    userData!['rol']?['nombre_rol'],
-                    icon: Icons.verified_user,
-                    iconColor: Colors.deepPurple,
-                  ),
+                  _buildInfoRow('Rol', userData!['rol']?['nombre_rol'],
+                      icon: Icons.verified_user,
+                      iconColor: Colors.deepPurple),
                 ],
               ),
+              const SizedBox(height: 30),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const Footer(),
     );
   }
 
@@ -183,31 +146,6 @@ class _PerfilPageState extends State<PerfilPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _glassCard({required List<Widget> children}) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          )
-        ],
-        border: Border.all(color: Colors.white70, width: 1.2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
       ),
     );
   }

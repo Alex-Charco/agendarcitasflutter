@@ -1,4 +1,6 @@
+import 'package:agendarcitasflutter/widgets/glass_card_widget.dart';
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart';
 
 class ContactoPage extends StatelessWidget {
   const ContactoPage({super.key});
@@ -9,35 +11,22 @@ class ContactoPage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 243, 244, 246),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245),
+        elevation: 0,
+        centerTitle: true,
         title: const Text(
           'Contáctanos',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF90C0E8),
-                Color(0xFF97CBF6),
-                Color(0xFFF5F7FC),
-              ],
-            ),
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              const SizedBox(height: 20),
-              _glassCard(
-                children: const [
+              SizedBox(height: 20),
+              GlassCard(
+                children: [
                   Text(
                     'Hospital de Brigada de Selva No.17 “Pastaza”',
                     style: TextStyle(
@@ -64,35 +53,12 @@ class ContactoPage extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 30),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  static Widget _glassCard({required List<Widget> children}) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blue.shade900.withAlpha((0.5 * 255).toInt()),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade300,
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          )
-        ],
-        border: Border.all(color: Colors.white70, width: 1.2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }
