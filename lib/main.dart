@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Agendamiento de citas médicas',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: const Color.fromARGB(255, 111, 252, 205),
           brightness: Brightness.light,
         ),
         useMaterial3: true,
