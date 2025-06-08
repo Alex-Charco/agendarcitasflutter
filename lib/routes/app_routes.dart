@@ -4,6 +4,7 @@ import 'package:agendarcitasflutter/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:agendarcitasflutter/views/login_view.dart';
 import 'package:agendarcitasflutter/views/reset_password_view.dart';
+import 'package:agendarcitasflutter/pages/turnos_page.dart';
 
 class AppRoutes {
   static const String login = '/login';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String reset = '/reset';
   static const String cita = '/consultar_cita';
   static const String contacto = '/contacto';
+  static const String turno = '/turno';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final String routeName = settings.name ?? login;
@@ -27,6 +29,8 @@ class AppRoutes {
             builder: (_) => const ConsultaCitaPacientePage());
       case contacto:
         return MaterialPageRoute(builder: (_) => const ContactoPage());
+	  case turno:
+        return MaterialPageRoute(builder: (_) => const TurnosPage());
       default:
         return MaterialPageRoute(builder: (_) => const LoginView());
     }

@@ -22,8 +22,12 @@ Para ejecut elar proyecto Flutter se utiliza el comando:
 
 	flutter pub add flutter_dotenv
 
-Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
+Se emplea el paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
 
+	flutter pub add fluttertoast
+  
+ Se emplea el paquete fluttertoast para las notificacioones
+ 
 ## Instalación de dependencias para pruebas unitarias
 
 	flutter pub add mockito
