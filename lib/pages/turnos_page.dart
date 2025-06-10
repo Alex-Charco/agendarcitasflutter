@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/turno.dart';
 import '../widgets/modal_registrar_cita.dart';
+import 'package:agendarcitasflutter/utils/dialog_utils.dart';
 
 class TurnosPage extends StatefulWidget {
   const TurnosPage({Key? key}) : super(key: key);
@@ -38,9 +39,15 @@ class _TurnosPageState extends State<TurnosPage> {
   Future<void> fetchTurnos() async {
     setState(() => loading = true);
     try {
-      turnos = await ApiService.getTurnos();
-      filteredTurnos = turnos;
-    } catch (_) {}
+  turnos = await ApiService.getTurnos();
+  print('Turnos recibidos: ${turnos.length}');
+  if (turnos.isNotEmpty) {
+    print('Primer turno: ${turnos[0].fecha} - ${turnos[0].hora}');
+  }
+  filteredTurnos = turnos;
+} catch (e) {
+  print('Error al obtener turnos: $e');
+}
     setState(() => loading = false);
   }
 
@@ -132,11 +139,9 @@ class _TurnosPageState extends State<TurnosPage> {
                                     builder: (_) => ModalRegistrarCita(
                                       turno: turno,
                                       onConfirm: () async {
-                                        await ApiService.registrarCita(turno.idTurno);
+                                        await ApiService.registrarCita(context, turno.idTurno);
                                         Navigator.pop(context);
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Cita registrada con éxito')),
-                                        );
+                                        showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
                                         fetchTurnos();
                                       },
                                     ),
@@ -165,18 +170,28 @@ class _TurnosPageState extends State<TurnosPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 20, color: iconColor),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 4),
-          Expanded(child: Text(value)),
-        ],
-      ),
+			  crossAxisAlignment: CrossAxisAlignment.start,
+			  children: [
+				Icon(icon, size: 20, color: iconColor),
+				const SizedBox(width: 8),
+				Flexible(
+				  child: Text(
+					label,
+					style: const TextStyle(fontWeight: FontWeight.bold),
+					overflow: TextOverflow.ellipsis,
+					softWrap: false,
+				  ),
+				),
+				const SizedBox(width: 4),
+				Expanded(
+				  child: Text(
+					value,
+					overflow: TextOverflow.ellipsis,
+				  ),
+				),
+			  ],
+			)
+
     );
   }
 }
