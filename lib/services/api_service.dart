@@ -24,7 +24,7 @@ class ApiService {
     throw Exception('Token no disponible. Debe iniciar sesi贸n nuevamente.');
   }
 
-  final url = '$baseUrl/api/cita/get/paciente/$identificacion';
+  final url = '$baseUrl/api/cita/get/paciente/$identificacion?desdeHoy=true';
 
   final response = await http.get(
     Uri.parse(url),
