@@ -39,7 +39,7 @@ class PdfGenerator {
                     fontSize: 22,
                     fontWeight: pw.FontWeight.bold,
                     font: robotoFont,
-                    color: PdfColor.fromHex('#0000FF'), 
+                    color: PdfColor.fromHex('#0000FF'),
                   ),
                 ),
               ],
@@ -60,24 +60,15 @@ class PdfGenerator {
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('No. IDENTIFICACIÓN:  ${paciente.identificacion}', style: pw.TextStyle(font: robotoFont)),
-              pw.Text('PACIENTE:            ${paciente.nombre}', style: pw.TextStyle(font: robotoFont)),
-              pw.Text('Médico:              ${cita.nombreMedico}', style: pw.TextStyle(font: robotoFont)),
-              pw.Text('Especialidad:        ${cita.especialidad}', style: pw.TextStyle(font: robotoFont)),
-              pw.Text('Tipo de Atención:    ${cita.tipoAtencion}', style: pw.TextStyle(font: robotoFont)),
-              pw.Text('Consultorio:         ${cita.consultorio}', style: pw.TextStyle(font: robotoFont)),
-              pw.Row(children: [
-                pw.Text('Fecha del Turno:   ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.fechaTurno, style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
-              ]),
-              pw.Row(children: [
-                pw.Text('No. Turno:         ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.numeroTurno.toString(), style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
-              ]),
-              pw.Row(children: [
-                pw.Text('Hora del Turno:    ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.horaTurno, style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
-              ]),
+              buildLabelValueRow('No. IDENTIFICACIÓN:', paciente.identificacion, robotoFont),
+              buildLabelValueRow('PACIENTE:', paciente.nombre, robotoFont),
+              buildLabelValueRow('Médico:', cita.nombreMedico, robotoFont),
+              buildLabelValueRow('Especialidad:', cita.especialidad, robotoFont),
+              buildLabelValueRow('Tipo de Atención:', cita.tipoAtencion, robotoFont),
+              buildLabelValueRow('Consultorio:', cita.consultorio, robotoFont),
+              buildLabelValueRow('Fecha del Turno:', cita.fechaTurno, robotoFont, color: PdfColor.fromHex('#FF0000')),
+              buildLabelValueRow('No. Turno:', cita.numeroTurno.toString(), robotoFont, color: PdfColor.fromHex('#FF0000')),
+              buildLabelValueRow('Hora del Turno:', cita.horaTurno, robotoFont, color: PdfColor.fromHex('#FF0000')),
               pw.SizedBox(height: 20),
               pw.Center(
                 child: pw.Text(
@@ -85,13 +76,13 @@ class PdfGenerator {
                   style: pw.TextStyle(
                     fontSize: 14,
                     font: robotoFont,
-                    color: PdfColor.fromHex('#FF0000'), 
+                    color: PdfColor.fromHex('#FF0000'),
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
               ),
               pw.SizedBox(height: 20),
-              pw.Text('Fecha creación:  ${cita.fechaCreacion}', style: pw.TextStyle(font: robotoFont)),
+              buildLabelValueRow('Fecha creación:', cita.fechaCreacion, robotoFont),
             ],
           ),
         ],
@@ -103,5 +94,26 @@ class PdfGenerator {
     await file.writeAsBytes(await pdf.save());
 
     return file;
+  }
+
+  static pw.Widget buildLabelValueRow(String label, String value, pw.Font font, {PdfColor? color}) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 2),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            width: 130, // Ancho fijo para la columna de etiquetas
+            child: pw.Text(label, style: pw.TextStyle(font: font)),
+          ),
+          pw.Expanded(
+            child: pw.Text(
+              value,
+              style: pw.TextStyle(font: font, color: color),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
