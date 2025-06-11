@@ -46,6 +46,14 @@ Se emplea el paquete flutter_dotenv de Flutter que te permite cargar variables d
 		mockito: ^5.4.4        # ✅ compatible con Dart 3.5.4 que se esta utilizando
 		build_runner: ^2.3.3   # ✅ también compatible
 
+## Instalación de dependencias para convertir a formato pdf
+
+	flutter pub add pdf
+	
+	flutter pub add printing
+	
+	flutter pub add path_provider
+	
 ## Corrección de errores
 1. Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
 

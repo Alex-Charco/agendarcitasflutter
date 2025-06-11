@@ -5,9 +5,10 @@ import '../widgets/modal_registrar_cita.dart';
 import 'package:agendarcitasflutter/utils/dialog_utils.dart';
 
 class TurnosPage extends StatefulWidget {
-  const TurnosPage({Key? key}) : super(key: key);
+  const TurnosPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TurnosPageState createState() => _TurnosPageState();
 }
 
@@ -40,12 +41,13 @@ class _TurnosPageState extends State<TurnosPage> {
     setState(() => loading = true);
     try {
   turnos = await ApiService.getTurnos();
-  print('Turnos recibidos: ${turnos.length}');
   if (turnos.isNotEmpty) {
+    // ignore: avoid_print
     print('Primer turno: ${turnos[0].fecha} - ${turnos[0].hora}');
   }
   filteredTurnos = turnos;
 } catch (e) {
+  // ignore: avoid_print
   print('Error al obtener turnos: $e');
 }
     setState(() => loading = false);
@@ -140,7 +142,9 @@ class _TurnosPageState extends State<TurnosPage> {
                                       turno: turno,
                                       onConfirm: () async {
                                         await ApiService.registrarCita(context, turno.idTurno);
+                                        // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
+                                        // ignore: use_build_context_synchronously
                                         showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
                                         fetchTurnos();
                                       },

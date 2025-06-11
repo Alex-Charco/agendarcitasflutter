@@ -1,6 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/paciente.dart';
+import '../models/cita.dart';
 import '../models/paciente_cita_response.dart';
 import '../models/turno.dart';
 import 'dart:convert';
@@ -11,33 +13,44 @@ class ApiService {
   static final String? baseUrl = dotenv.env['API_URL_GET_CITA'];
 
   static Future<PacienteCitaResponse> getCitasPorIdentificacion(String identificacion) async {
-    if (baseUrl == null) {
-      throw Exception('La URL base no está definida en el archivo .env');
-    }
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
-    if (token == null) {
-      throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
-    }
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/cita/get/paciente/$identificacion'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return PacienteCitaResponse.fromJson(data);
-    } else {
-      throw Exception('Error al obtener citas: ${response.statusCode}');
-    }
+  if (baseUrl == null) {
+    throw Exception('La URL base no está definida en el archivo .env');
   }
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+
+  if (token == null) {
+    throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
+  }
+
+  final url = '$baseUrl/api/cita/get/paciente/$identificacion';
+
+  final response = await http.get(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    // Verifica si el JSON tiene la lista de citas como "citas"
+    final citasList = data['citas'] as List<dynamic>? ?? [];
+
+    final paciente = Paciente.fromJson(data['paciente']);
+    final citas = citasList.map((citaJson) => Cita.fromJson(citaJson)).toList();
+
+    return PacienteCitaResponse(paciente: paciente, citas: citas);
+  } else {
+    throw Exception('Error al obtener citas: ${response.statusCode}');
+  }
+}
+
 
   // Obtener turnos disponibles
   static Future<List<Turno>> getTurnos() async {
@@ -52,18 +65,12 @@ class ApiService {
     throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
   }
 
-  print('Base URL: $baseUrl');
-  print('Endpoint: $baseUrl/api/turno/get/disponibles');
-
   final response = await http.get(
     Uri.parse('$baseUrl/api/turno/get/disponibles'),
     headers: {
       'Authorization': 'Bearer $token',
     },
   );
-
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body); // 👈 Esto es un Map
@@ -98,6 +105,7 @@ class ApiService {
     if (idPaciente == null) {
       // ignore: use_build_context_synchronously
       showErrorDialog(
+          // ignore: use_build_context_synchronously
           context, 'Error', 'Información de paciente no disponible');
       throw Exception('ID del paciente no disponible');
     }
@@ -117,11 +125,11 @@ class ApiService {
     if (response.statusCode == 200 || response.statusCode == 201) {
       // ignore: use_build_context_synchronously
       showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
-      print('Status code: ${response.statusCode}');
       return;
     } else if (response.statusCode == 409) {
       // ignore: use_build_context_synchronously
       showErrorDialog(
+          // ignore: use_build_context_synchronously
           context, 'Conflicto', 'Ya tienes una cita registrada para ese día');
       throw Exception('Conflicto de cita');
     } else if (response.statusCode == 401) {
@@ -129,7 +137,6 @@ class ApiService {
       showErrorDialog(context, 'Sesión caducada', 'Por favor inicia sesión.');
       throw Exception('Token expirado');
     } else {
-      print('Entró en bloque de error - status: ${response.statusCode}');
       String mensajeError = 'Error al registrar la cita.';
 
       try {
@@ -141,8 +148,8 @@ class ApiService {
         } else if (decoded is String) {
           mensajeError = decoded;
         }
-        print('Response body: ${response.body}');
       } catch (_) {
+        // ignore: avoid_print
         print('No se pudo decodificar el cuerpo de la respuesta');
       }
 
