@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart'; 
 import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
 
@@ -38,7 +39,7 @@ class PdfGenerator {
                     fontSize: 22,
                     fontWeight: pw.FontWeight.bold,
                     font: robotoFont,
-                    color: pw.PdfColor.fromHex('#0000FF'),
+                    color: PdfColor.fromHex('#0000FF'), 
                   ),
                 ),
               ],
@@ -67,15 +68,15 @@ class PdfGenerator {
               pw.Text('Consultorio:         ${cita.consultorio}', style: pw.TextStyle(font: robotoFont)),
               pw.Row(children: [
                 pw.Text('Fecha del Turno:   ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.fechaTurno, style: pw.TextStyle(font: robotoFont, color: pw.PdfColor.fromHex('#FF0000')))
+                pw.Text(cita.fechaTurno, style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
               ]),
               pw.Row(children: [
                 pw.Text('No. Turno:         ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.numeroTurno.toString(), style: pw.TextStyle(font: robotoFont, color: pw.PdfColor.fromHex('#FF0000')))
+                pw.Text(cita.numeroTurno.toString(), style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
               ]),
               pw.Row(children: [
                 pw.Text('Hora del Turno:    ', style: pw.TextStyle(font: robotoFont)),
-                pw.Text(cita.horaTurno, style: pw.TextStyle(font: robotoFont, color: pw.PdfColor.fromHex('#FF0000')))
+                pw.Text(cita.horaTurno, style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000'))) 
               ]),
               pw.SizedBox(height: 20),
               pw.Center(
@@ -84,7 +85,7 @@ class PdfGenerator {
                   style: pw.TextStyle(
                     fontSize: 14,
                     font: robotoFont,
-                    color: pw.PdfColor.fromHex('#FF0000'),
+                    color: PdfColor.fromHex('#FF0000'), 
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
