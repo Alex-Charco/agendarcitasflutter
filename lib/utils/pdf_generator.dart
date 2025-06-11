@@ -27,67 +27,81 @@ class PdfGenerator {
     pdf.addPage(
       pw.MultiPage(
         build: (context) => [
-          pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.center,
+          // Logo y título centrado
+          pw.Center(
+            child: pw.Row(
+              mainAxisSize: pw.MainAxisSize.min,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Image(logoImage, width: 50, height: 50),
+                pw.SizedBox(width: 10),
+                pw.Text(
+                  'Hospital de Brigada de Selva No.17 “Pastaza”',
+                  style: pw.TextStyle(
+                    fontSize: 22,
+                    fontWeight: pw.FontWeight.bold,
+                    font: robotoFont,
+                    color: PdfColor.fromHex('#0000FF'), // Azul
+                  ),
+                ),
+              ],
+            ),
+          ),
+          pw.SizedBox(height: 15),
+
+          // Título TURNO centrado
+          pw.Center(
+            child: pw.Text(
+              'TURNO',
+              style: pw.TextStyle(
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                font: robotoFont,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+
+          // Datos alineados a la izquierda
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Image(logoImage, width: 50, height: 50),
-              pw.SizedBox(width: 10),
-              pw.Text(
-                'HB 17 PASTAZA',
-                style: pw.TextStyle(
-                  fontSize: 22,
-                  fontWeight: pw.FontWeight.bold,
-                  font: robotoFont,
+              pw.Text('No. IDENTIFICACIÓN:  ${paciente.identificacion}', style: pw.TextStyle(font: robotoFont)),
+              pw.Text('PACIENTE:            ${paciente.nombre}', style: pw.TextStyle(font: robotoFont)),
+              pw.Text('Médico:              ${cita.nombreMedico}', style: pw.TextStyle(font: robotoFont)),
+              pw.Text('Especialidad:        ${cita.especialidad}', style: pw.TextStyle(font: robotoFont)),
+              pw.Text('Tipo de Atención:    ${cita.tipoAtencion}', style: pw.TextStyle(font: robotoFont)),
+              pw.Text('Consultorio:         ${cita.consultorio}', style: pw.TextStyle(font: robotoFont)),
+              pw.Row(children: [
+                pw.Text('Fecha del Turno:   ', style: pw.TextStyle(font: robotoFont)),
+                pw.Text('${cita.fechaTurno}', style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000')))
+              ]),
+              pw.Row(children: [
+                pw.Text('No. Turno:         ', style: pw.TextStyle(font: robotoFont)),
+                pw.Text('${cita.numeroTurno}', style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000')))
+              ]),
+              pw.Row(children: [
+                pw.Text('Hora del Turno:    ', style: pw.TextStyle(font: robotoFont)),
+                pw.Text('${cita.horaTurno}', style: pw.TextStyle(font: robotoFont, color: PdfColor.fromHex('#FF0000')))
+              ]),
+              pw.SizedBox(height: 20),
+              // Mensaje de advertencia centrado y en rojo
+              pw.Center(
+                child: pw.Text(
+                  'Favor asistir 20 minutos antes de su turno',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    font: robotoFont,
+                    color: PdfColor.fromHex('#FF0000'),
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
               ),
+              pw.SizedBox(height: 20),
+
+              // Fecha creación alineada a la izquierda
+              pw.Text('Fecha creación:  ${cita.fechaCreacion}', style: pw.TextStyle(font: robotoFont)),
             ],
-          ),
-          pw.SizedBox(height: 10),
-          pw.Text(
-            'TURNO',
-            style: pw.TextStyle(fontSize: 18, font: robotoFont),
-          ),
-          pw.SizedBox(height: 20),
-          pw.Text(
-            'Nombre: ${paciente.nombre}',
-            style: pw.TextStyle(font: robotoFont),
-          ),
-          pw.Text(
-            'Identificación: ${paciente.identificacion}',
-            style: pw.TextStyle(font: robotoFont),
-          ),
-          pw.SizedBox(height: 20),
-          // ignore: deprecated_member_use
-          pw.Table.fromTextArray(
-            headers: [
-              'Fecha',
-              'Hora',
-              'No. Turno',
-              'Médico',
-              'Especialidad',
-              'Tipo Atención',
-              'Consultorio',
-              'Estado',
-              'Fecha creación'
-            ],
-            data: [
-              [
-                cita.fechaTurno,
-                cita.horaTurno,
-                cita.numeroTurno.toString(),
-                cita.nombreMedico,
-                cita.especialidad,
-                cita.tipoAtencion,
-                cita.consultorio,
-                cita.estado,
-                cita.fechaCreacion,
-              ]
-            ],
-            headerStyle: pw.TextStyle(
-              fontWeight: pw.FontWeight.bold,
-              font: robotoFont,
-            ),
-            cellStyle: pw.TextStyle(font: robotoFont),
           ),
         ],
       ),
