@@ -1,4 +1,4 @@
-import 'package:agendarcitasflutter/services/api_service.dart';
+import '../services/api_service.dart';
 import 'package:agendarcitasflutter/widgets/cita_data_table.dart';
 import 'package:flutter/material.dart';
 import '../models/paciente.dart';

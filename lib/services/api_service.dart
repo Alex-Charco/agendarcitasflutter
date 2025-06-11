@@ -14,17 +14,17 @@ class ApiService {
 
   static Future<PacienteCitaResponse> getCitasPorIdentificacion(String identificacion) async {
   if (baseUrl == null) {
-    throw Exception('La URL base no está definida en el archivo .env');
+    throw Exception('La URL base no est谩 definida en el archivo .env');
   }
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
 
   if (token == null) {
-    throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
+    throw Exception('Token no disponible. Debe iniciar sesi贸n nuevamente.');
   }
 
-  final url = '$baseUrl/api/cita/get/paciente/$identificacion?desdeHoy=true';
+  final url = '$baseUrl/api/cita/get/paciente/$identificacion';
 
   final response = await http.get(
     Uri.parse(url),
@@ -34,7 +34,6 @@ class ApiService {
       'Authorization': 'Bearer $token',
     },
   );
-
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -55,14 +54,14 @@ class ApiService {
   // Obtener turnos disponibles
   static Future<List<Turno>> getTurnos() async {
   if (baseUrl == null) {
-    throw Exception('La URL base no está definida en el archivo .env');
+    throw Exception('La URL base no est谩 definida en el archivo .env');
   }
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
 
   if (token == null) {
-    throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
+    throw Exception('Token no disponible. Debe iniciar sesi贸n nuevamente.');
   }
 
   final response = await http.get(
@@ -73,9 +72,9 @@ class ApiService {
   );
 
   if (response.statusCode == 200) {
-    final data = jsonDecode(response.body); // 👈 Esto es un Map
-    final turnos = data['turnos'] as List;  // 👈 Sacamos solo la lista
-    return turnos.map((e) => Turno.fromJson(e)).toList(); // 👈 Mapeamos
+    final data = jsonDecode(response.body); // 馃憟 Esto es un Map
+    final turnos = data['turnos'] as List;  // 馃憟 Sacamos solo la lista
+    return turnos.map((e) => Turno.fromJson(e)).toList(); // 馃憟 Mapeamos
   } else {
     throw Exception('Error al obtener turnos: ${response.statusCode}');
   }
@@ -95,8 +94,8 @@ class ApiService {
 
     if (token == null || userJson == null) {
       // ignore: use_build_context_synchronously
-      showErrorDialog(context, 'Sesión expirada', 'Inicia sesión nuevamente.');
-      throw Exception('Sesión expirada');
+      showErrorDialog(context, 'Sesi贸n expirada', 'Inicia sesi贸n nuevamente.');
+      throw Exception('Sesi贸n expirada');
     }
 
     final user = jsonDecode(userJson);
@@ -106,7 +105,7 @@ class ApiService {
       // ignore: use_build_context_synchronously
       showErrorDialog(
           // ignore: use_build_context_synchronously
-          context, 'Error', 'Información de paciente no disponible');
+          context, 'Error', 'Informaci贸n de paciente no disponible');
       throw Exception('ID del paciente no disponible');
     }
 
@@ -124,17 +123,17 @@ class ApiService {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       // ignore: use_build_context_synchronously
-      showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
+      showSuccessDialog(context, '脡xito', 'Cita registrada con 茅xito');
       return;
     } else if (response.statusCode == 409) {
       // ignore: use_build_context_synchronously
       showErrorDialog(
           // ignore: use_build_context_synchronously
-          context, 'Conflicto', 'Ya tienes una cita registrada para ese día');
+          context, 'Conflicto', 'Ya tienes una cita registrada para ese d铆a');
       throw Exception('Conflicto de cita');
     } else if (response.statusCode == 401) {
       // ignore: use_build_context_synchronously
-      showErrorDialog(context, 'Sesión caducada', 'Por favor inicia sesión.');
+      showErrorDialog(context, 'Sesi贸n caducada', 'Por favor inicia sesi贸n.');
       throw Exception('Token expirado');
     } else {
       String mensajeError = 'Error al registrar la cita.';
@@ -144,7 +143,7 @@ class ApiService {
         if (decoded is Map<String, dynamic> && decoded['message'] != null) {
           mensajeError = decoded['message'];
           mensajeError =
-              mensajeError.replaceAll('�?Error en registrarCita: ', '');
+              mensajeError.replaceAll('鉂?Error en registrarCita: ', '');
         } else if (decoded is String) {
           mensajeError = decoded;
         }

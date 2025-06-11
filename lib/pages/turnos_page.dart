@@ -1,4 +1,4 @@
-import 'package:agendarcitasflutter/services/api_service.dart';
+import '../services/api_service.dart';
 import 'package:flutter/material.dart';
 import '../models/turno.dart';
 import '../widgets/modal_registrar_cita.dart';
