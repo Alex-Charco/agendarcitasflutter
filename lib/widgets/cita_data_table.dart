@@ -72,10 +72,10 @@ class CitaDataTable extends StatelessWidget {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-              (states) => Colors.blueGrey.shade50),
-          dataRowColor: MaterialStateProperty.resolveWith<Color?>(
-              (states) => Colors.white),
+          headingRowColor: WidgetStateProperty.resolveWith<Color?>(
+			(states) => Colors.blueGrey.shade50),
+		dataRowColor: WidgetStateProperty.resolveWith<Color?>(
+			(states) => Colors.white),
           columns: const [
             DataColumn(label: Text('Fecha', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Hora', style: TextStyle(fontWeight: FontWeight.bold))),
