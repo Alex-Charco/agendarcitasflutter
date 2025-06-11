@@ -8,7 +8,11 @@ class CitaDataTable extends StatelessWidget {
   final List<Cita> citas;
   final Paciente paciente;
 
-  const CitaDataTable({super.key, required this.citas, required this.paciente});
+  const CitaDataTable({
+    super.key,
+    required this.citas,
+    required this.paciente,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,61 +21,60 @@ class CitaDataTable extends StatelessWidget {
     if (citas.isEmpty) {
       return const Center(child: Text('No hay citas disponibles'));
     }
-	if (isMobile) {
-	  return Column(
-		crossAxisAlignment: CrossAxisAlignment.stretch,
-		children: List.generate(citas.length, (index) {
-		  final cita = citas[index];
-		  return Card(
-			color: Colors.white,
-			elevation: 3,
-			margin: const EdgeInsets.symmetric(vertical: 8),
-			child: Padding(
-			  padding: const EdgeInsets.all(12.0),
-			  child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-				  Text('Fecha: ${cita.fechaTurno}', style: const TextStyle(fontWeight: FontWeight.bold)),
-				  Text('Hora: ${cita.horaTurno}'),
-				  Text('No. Turno: ${cita.numeroTurno}'),
-				  Text('Médico: ${cita.nombreMedico}'),
-				  Text('Especialidad: ${cita.especialidad}'),
-				  Text('Tipo Atención: ${cita.tipoAtencion}'),
-				  Text('Consultorio: ${cita.consultorio}'),
-				  Text('Estado: ${cita.estado}'),
-				  Text('Fecha creación: ${cita.fechaCreacion}'),
-				  const SizedBox(height: 10),
-				  Align(
-					alignment: Alignment.centerRight,
-					child: ElevatedButton.icon(
-					  icon: const Icon(Icons.picture_as_pdf),
-					  label: const Text('Descargar PDF'),
-					  onPressed: () async {
-						final pdfFile = await PdfGenerator.generarPdfConCita(paciente, cita);
-						await Printing.layoutPdf(
-						  onLayout: (format) => pdfFile.readAsBytes(),
-						  name: "cita_${cita.numeroTurno}.pdf",
-						);
-					  },
-					),
-				  ),
-				],
-			  ),
-			),
-		  );
-		}),
-	  );
-	}
-     else {
-      return Container(
-		  child: SingleChildScrollView(
-			scrollDirection: Axis.horizontal,
+
+    if (isMobile) {
+      // Vista para móviles: Cards
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(citas.length, (index) {
+          final cita = citas[index];
+          return Card(
+            color: Colors.white,
+            elevation: 3,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Fecha: ${cita.fechaTurno}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Hora: ${cita.horaTurno}'),
+                  Text('No. Turno: ${cita.numeroTurno}'),
+                  Text('Médico: ${cita.nombreMedico}'),
+                  Text('Especialidad: ${cita.especialidad}'),
+                  Text('Tipo Atención: ${cita.tipoAtencion}'),
+                  Text('Consultorio: ${cita.consultorio}'),
+                  Text('Estado: ${cita.estado}'),
+                  Text('Fecha creación: ${cita.fechaCreacion}'),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.picture_as_pdf),
+                      label: const Text('Descargar PDF'),
+                      onPressed: () async {
+                        final pdfFile = await PdfGenerator.generarPdfConCita(paciente, cita);
+                        await Printing.layoutPdf(
+                          onLayout: (format) => pdfFile.readAsBytes(),
+                          name: "cita_${cita.numeroTurno}.pdf",
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      );
+    } else {
+      // Vista para escritorio: DataTable
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: DataTable(
-          // ignore: deprecated_member_use
-          headingRowColor: MaterialStateProperty.resolveWith(
+          headingRowColor: MaterialStateProperty.resolveWith<Color?>(
               (states) => Colors.blueGrey.shade50),
-          // ignore: deprecated_member_use
-          dataRowColor: MaterialStateProperty.resolveWith(
+          dataRowColor: MaterialStateProperty.resolveWith<Color?>(
               (states) => Colors.white),
           columns: const [
             DataColumn(label: Text('Fecha', style: TextStyle(fontWeight: FontWeight.bold))),
