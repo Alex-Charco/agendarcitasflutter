@@ -24,7 +24,7 @@ class ApiService {
     throw Exception('Token no disponible. Debe iniciar sesión nuevamente.');
   }
 
-  final url = '$baseUrl/api/cita/get/paciente/$identificacion';
+  final url = '$baseUrl/api/cita/get/paciente/$identificacion?desdeHoy=true';
 
   final response = await http.get(
     Uri.parse(url),
@@ -144,7 +144,7 @@ class ApiService {
         if (decoded is Map<String, dynamic> && decoded['message'] != null) {
           mensajeError = decoded['message'];
           mensajeError =
-              mensajeError.replaceAll('❌ Error en registrarCita: ', '');
+              mensajeError.replaceAll('�?Error en registrarCita: ', '');
         } else if (decoded is String) {
           mensajeError = decoded;
         }
