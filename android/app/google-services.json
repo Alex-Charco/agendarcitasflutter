@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "190678389740",
+    "project_id": "agendarcitasflutter",
+    "storage_bucket": "agendarcitasflutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190678389740:android:985524a9bd0c16c3c626c9",
+        "android_client_info": {
+          "package_name": "com.utpl.agendarcitasflutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfWGow62e294piMGoAjf2q--kwZT2nwbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
