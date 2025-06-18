@@ -31,7 +31,7 @@ class CitaDataTable extends StatelessWidget {
           return Card(
             color: Colors.white,
             elevation: 3,
-            margin: const EdgeInsets.symmetric(vertical: 8),
+            margin: const EdgeInsets.symmetric(vertical: 10),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
