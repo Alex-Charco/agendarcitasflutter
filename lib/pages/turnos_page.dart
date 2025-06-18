@@ -144,12 +144,12 @@ class _TurnosPageState extends State<TurnosPage> {
                                         await ApiService.registrarCita(context, turno.idTurno);
                                         // ignore: use_build_context_synchronously
                                         Navigator.pop(context);
-										// Espera un micro-tick antes de mostrar el dialog
-										Future.delayed(Duration(milliseconds: 100), () {
-											// ignore: use_build_context_synchronously
-											showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
+                                        // Espera un micro-tick antes de mostrar el dialog
+                                        Future.delayed(const Duration(milliseconds: 100), () {
+                                          // ignore: use_build_context_synchronously
+                                          showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
                                         });
-										fetchTurnos();
+                                        fetchTurnos();
                                       },
                                     ),
                                   ),
