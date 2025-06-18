@@ -76,7 +76,8 @@ class _HomeViewState extends State<HomeView> {
                     imageUrl: 'assets/images/hospital-banner.jpg',
                     buttons: [
                       BannerButton(
-                          text: 'Agendar cita', link: '/registrar_cita'),
+                          text: 'Agendar cita', 
+						  link: '/turno'),
                       BannerButton(
                           text: 'Consultar cita',
                           link: '/consultar_cita',

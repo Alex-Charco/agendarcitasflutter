@@ -130,7 +130,9 @@ class LoginViewState extends State<LoginView> {
                     Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 60),
+                        padding: const EdgeInsets.only(top: 90),
+						child: Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           mainAxisAlignment:
                               MainAxisAlignment.center, // Centrado vertical
@@ -411,6 +413,7 @@ class LoginViewState extends State<LoginView> {
                             ),
                           ],
                         ),
+					   ),
                       ),
                     ),
                   ],

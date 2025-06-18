@@ -22,8 +22,12 @@ Para ejecut elar proyecto Flutter se utiliza el comando:
 
 	flutter pub add flutter_dotenv
 
-Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
+Se emplea el paquete flutter_dotenv de Flutter que te permite cargar variables de entorno desde un archivo .env.
 
+	flutter pub add fluttertoast
+  
+ Se emplea el paquete fluttertoast para las notificacioones
+ 
 ## Instalación de dependencias para pruebas unitarias
 
 	flutter pub add mockito
@@ -42,6 +46,14 @@ Se emplea paquete flutter_dotenv de Flutter que te permite cargar variables de e
 		mockito: ^5.4.4        # ✅ compatible con Dart 3.5.4 que se esta utilizando
 		build_runner: ^2.3.3   # ✅ también compatible
 
+## Instalación de dependencias para convertir a formato pdf
+
+	flutter pub add pdf
+	
+	flutter pub add printing
+	
+	flutter pub add path_provider
+	
 ## Corrección de errores
 1. Se deabilito **'Language Support for Java(TM) by Red Hat'** en VScode por causar errores en android/build.gradle.
 

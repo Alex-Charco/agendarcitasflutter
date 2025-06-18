@@ -1,9 +1,9 @@
+import '../services/api_service.dart';
 import 'package:agendarcitasflutter/widgets/cita_data_table.dart';
 import 'package:flutter/material.dart';
 import '../models/paciente.dart';
 import '../models/cita.dart';
 import '../models/paciente_cita_response.dart';
-import '../services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -73,14 +73,16 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            color: const Color.fromARGB(255, 243, 244, 246), // Fondo gris claro como el diseño de referencia
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Card(
-                  elevation: 4,
+                  elevation: 3,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(12)),
                   color: Colors.white,
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16.0),
@@ -90,19 +92,35 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
                         Text(
                           paciente!.nombre,
                           style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
                         ),
                         const SizedBox(height: 8),
-                        Text('Identificación: ${paciente!.identificacion}'),
-                        Text('Correo: ${paciente!.correo}'),
-                        Text('Edad: ${paciente!.edad} años'),
-                        Text('Grupo Etario: ${paciente!.grupoEtario}'),
+                        Text(
+                          'Identificación: ${paciente!.identificacion}',
+                          style: const TextStyle(color: Colors.black54),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                CitaDataTable(citas: citas),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  child: CitaDataTable(citas: citas, paciente: paciente!,),
+                ),
               ],
             ),
           ),
@@ -114,8 +132,20 @@ class _ConsultaCitaPacientePageState extends State<ConsultaCitaPacientePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 243, 244, 246), // Fondo principal igual que diseño referencia
       appBar: AppBar(
-        title: const Text('Consulta de Citas'),
+        backgroundColor: const Color.fromARGB(255, 237, 241, 245), // Mismo fondo gris claro del app bar
+        elevation: 2,
+        centerTitle: true,
+        title: const Text(
+          'Consulta de Citas',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.black87,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: _buildBody(),
     );
