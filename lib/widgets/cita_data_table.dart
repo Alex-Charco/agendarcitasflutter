@@ -44,6 +44,9 @@ class CitaDataTable extends StatelessWidget {
                   Text('Especialidad: ${cita.especialidad}'),
                   Text('Tipo Atención: ${cita.tipoAtencion}'),
                   Text('Consultorio: ${cita.consultorio}'),
+                  Text('Celular Médico: ${cita.celularMedico}'),
+                  Text('Correo Médico: ${cita.correoMedico}'),
+
                   Text('Estado: ${cita.estado}'),
                   Text('Fecha creación: ${cita.fechaCreacion}'),
                   const SizedBox(height: 10),
@@ -73,9 +76,9 @@ class CitaDataTable extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           headingRowColor: WidgetStateProperty.resolveWith<Color?>(
-			(states) => Colors.blueGrey.shade50),
-		dataRowColor: WidgetStateProperty.resolveWith<Color?>(
-			(states) => Colors.white),
+              (states) => Colors.blueGrey.shade50),
+          dataRowColor: WidgetStateProperty.resolveWith<Color?>(
+              (states) => Colors.white),
           columns: const [
             DataColumn(label: Text('Fecha', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Hora', style: TextStyle(fontWeight: FontWeight.bold))),
@@ -84,6 +87,8 @@ class CitaDataTable extends StatelessWidget {
             DataColumn(label: Text('Especialidad', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Tipo Atención', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Consultorio', style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(label: Text('Celular Médico', style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(label: Text('Correo Médico', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Estado', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('Fecha creación', style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(label: Text('PDF')),
@@ -97,6 +102,8 @@ class CitaDataTable extends StatelessWidget {
               DataCell(Text(cita.especialidad)),
               DataCell(Text(cita.tipoAtencion)),
               DataCell(Text(cita.consultorio)),
+              DataCell(Text(cita.celularMedico)),
+              DataCell(Text(cita.correoMedico)),
               DataCell(Text(cita.estado)),
               DataCell(Text(cita.fechaCreacion)),
               DataCell(

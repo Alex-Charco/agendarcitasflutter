@@ -28,28 +28,29 @@ class _TurnosPageState extends State<TurnosPage> {
   void _filterTurnos() {
     final query = filterController.text.toLowerCase();
     setState(() {
-      filteredTurnos = turnos.where((t) =>
-        t.medico.medico.toLowerCase().contains(query) ||
-        t.medico.especialidad.toLowerCase().contains(query) ||
-        t.fecha.contains(query) ||
-        t.hora.contains(query)
-      ).toList();
+      filteredTurnos = turnos
+          .where((t) =>
+              t.medico.medico.toLowerCase().contains(query) ||
+              t.medico.especialidad.toLowerCase().contains(query) ||
+              t.fecha.contains(query) ||
+              t.hora.contains(query))
+          .toList();
     });
   }
 
   Future<void> fetchTurnos() async {
     setState(() => loading = true);
     try {
-  turnos = await ApiService.getTurnos();
-  if (turnos.isNotEmpty) {
-    // ignore: avoid_print
-    print('Primer turno: ${turnos[0].fecha} - ${turnos[0].hora}');
-  }
-  filteredTurnos = turnos;
-} catch (e) {
-  // ignore: avoid_print
-  print('Error al obtener turnos: $e');
-}
+      turnos = await ApiService.getTurnos();
+      if (turnos.isNotEmpty) {
+        // ignore: avoid_print
+        print('Primer turno: ${turnos[0].fecha} - ${turnos[0].hora}');
+      }
+      filteredTurnos = turnos;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error al obtener turnos: $e');
+    }
     setState(() => loading = false);
   }
 
@@ -76,22 +77,22 @@ class _TurnosPageState extends State<TurnosPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                  controller: filterController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search), 
-                    labelText: 'Filtrar turnos...',
-                    border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30), 
+                    controller: filterController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      labelText: 'Filtrar turnos...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.blue),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.blue),
-                    ),
-                  ),
                   ),
                 ),
                 Expanded(
@@ -101,7 +102,8 @@ class _TurnosPageState extends State<TurnosPage> {
                       final turno = filteredTurnos[index];
                       return Card(
                         color: Colors.white,
-                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         elevation: 3,
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -136,23 +138,39 @@ class _TurnosPageState extends State<TurnosPage> {
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
-                                  onPressed: () => showDialog(
-                                    context: context,
-                                    builder: (_) => ModalRegistrarCita(
-                                      turno: turno,
-                                      onConfirm: () async {
-                                        await ApiService.registrarCita(context, turno.idTurno);
-                                        // ignore: use_build_context_synchronously
-                                        Navigator.pop(context);
-                                        // Espera un micro-tick antes de mostrar el dialog
-                                        Future.delayed(const Duration(milliseconds: 100), () {
-                                          // ignore: use_build_context_synchronously
-                                          showSuccessDialog(context, 'Éxito', 'Cita registrada con éxito');
-                                        });
-                                        fetchTurnos();
-                                      },
-                                    ),
-                                  ),
+                                  onPressed: () {
+                                    final scaffoldContext =
+                                        context; // Guarda el contexto actual del Scaffold
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => ModalRegistrarCita(
+                                        turno: turno,
+                                        onConfirm: () async {
+                                          await ApiService.registrarCita(
+                                              context, turno.idTurno);
+
+                                          Navigator.pop(
+                                              // ignore: use_build_context_synchronously
+                                              context); // Cierra el modal
+
+                                          // Espera un micro-tick antes de usar el contexto del Scaffold
+                                          Future.delayed(
+                                              const Duration(milliseconds: 100),
+                                              () {
+                                            showSuccessDialog(
+                                              // ignore: use_build_context_synchronously
+                                              scaffoldContext, // Usa el contexto padre válido
+                                              'Éxito',
+                                              'Cita registrada con éxito',
+                                            );
+                                          });
+
+                                          fetchTurnos(); // Actualiza lista
+                                        },
+                                      ),
+                                    );
+                                  },
                                   child: const Text('Registrar Cita'),
                                 ),
                               ),
@@ -175,30 +193,28 @@ class _TurnosPageState extends State<TurnosPage> {
     required Color iconColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-			  crossAxisAlignment: CrossAxisAlignment.start,
-			  children: [
-				Icon(icon, size: 20, color: iconColor),
-				const SizedBox(width: 8),
-				Flexible(
-				  child: Text(
-					label,
-					style: const TextStyle(fontWeight: FontWeight.bold),
-					overflow: TextOverflow.ellipsis,
-					softWrap: false,
-				  ),
-				),
-				const SizedBox(width: 4),
-				Expanded(
-				  child: Text(
-					value,
-					overflow: TextOverflow.ellipsis,
-				  ),
-				),
-			  ],
-			)
-
-    );
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 20, color: iconColor),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                value,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ));
   }
 }
