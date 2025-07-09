@@ -16,7 +16,7 @@ migrate_working_dir/
 *.iws
 .idea/
 # env comentar para usar con firebase desplegar app
-#.env
+.env
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -45,7 +45,7 @@ app.*.map.json
 /android/app/release
 
 # env comentar para usar con firebase desplegar app
-#/android/app/google-services.json
-#/lib/firebase
-#/test/
+/android/app/google-services.json
+/lib/firebase
+/test/
 /coverage/
