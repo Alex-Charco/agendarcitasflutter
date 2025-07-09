@@ -44,12 +44,12 @@ class ContactoPage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.email, color: Colors.indigo),
                     title: Text('Correo electrónico'),
-                    subtitle: Text('contacto@hospitalcentral.com'),
+                    subtitle: Text('brigadaselva17hostipal@ejercito.mil.ec'),
                   ),
                   ListTile(
                     leading: Icon(Icons.location_on, color: Colors.redAccent),
                     title: Text('Dirección'),
-                    subtitle: Text('Av. Ceslao Marín, Puyo'),
+                    subtitle: Text('Av. General Eloy Alfaro y Calle Ceslao Marin, cerca de Iglesia Católica Jesús del Gran Poder - Pindo (El Dorado).'),
                   ),
                 ],
               ),

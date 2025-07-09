@@ -15,7 +15,7 @@ class CardFeature extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 170, // ✅ Altura uniforme
+      height: 185, // ✅ Altura uniforme
       child: Card(
         color: Colors.white,
         elevation: 3,

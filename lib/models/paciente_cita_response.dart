@@ -11,11 +11,11 @@ class PacienteCitaResponse {
   });
 
   factory PacienteCitaResponse.fromJson(Map<String, dynamic> json) {
-	  final citasJson = json['citas'] as List<dynamic>? ?? [];
+    final citasJson = json['citas'] as List<dynamic>? ?? [];
 
-	  return PacienteCitaResponse(
-		paciente: Paciente.fromJson(json['paciente']),
-		citas: citasJson.map((cita) => Cita.fromJson(cita)).toList(),
-	  );
-	}
+    return PacienteCitaResponse(
+      paciente: Paciente.fromJson(json['paciente']),
+      citas: citasJson.map((cita) => Cita.fromJson(cita)).toList(),
+    );
+  }
 }

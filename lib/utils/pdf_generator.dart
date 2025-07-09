@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart'; 
+import 'package:pdf/pdf.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
 
@@ -60,15 +60,25 @@ class PdfGenerator {
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              buildLabelValueRow('No. IDENTIFICACIÓN:', paciente.identificacion, robotoFont),
+              buildLabelValueRow(
+                  'No. IDENTIFICACIÓN:', paciente.identificacion, robotoFont),
               buildLabelValueRow('PACIENTE:', paciente.nombre, robotoFont),
               buildLabelValueRow('Médico:', cita.nombreMedico, robotoFont),
-              buildLabelValueRow('Especialidad:', cita.especialidad, robotoFont),
-              buildLabelValueRow('Tipo de Atención:', cita.tipoAtencion, robotoFont),
+              buildLabelValueRow(
+                  'Especialidad:', cita.especialidad, robotoFont),
+              buildLabelValueRow(
+                  'Tipo de Atención:', cita.tipoAtencion, robotoFont),
               buildLabelValueRow('Consultorio:', cita.consultorio, robotoFont),
-              buildLabelValueRow('Fecha del Turno:', cita.fechaTurno, robotoFont, color: PdfColor.fromHex('#FF0000')),
-              buildLabelValueRow('No. Turno:', cita.numeroTurno.toString(), robotoFont, color: PdfColor.fromHex('#FF0000')),
-              buildLabelValueRow('Hora del Turno:', cita.horaTurno, robotoFont, color: PdfColor.fromHex('#FF0000')),
+              buildLabelValueRow(
+                  'Celular Médico:', cita.celularMedico, robotoFont),
+              buildLabelValueRow(
+                  'Fecha del Turno:', cita.fechaTurno, robotoFont,
+                  color: PdfColor.fromHex('#FF0000')),
+              buildLabelValueRow(
+                  'No. Turno:', cita.numeroTurno.toString(), robotoFont,
+                  color: PdfColor.fromHex('#FF0000')),
+              buildLabelValueRow('Hora del Turno:', cita.horaTurno, robotoFont,
+                  color: PdfColor.fromHex('#FF0000')),
               pw.SizedBox(height: 20),
               pw.Center(
                 child: pw.Text(
@@ -82,7 +92,8 @@ class PdfGenerator {
                 ),
               ),
               pw.SizedBox(height: 20),
-              buildLabelValueRow('Fecha creación:', cita.fechaCreacion, robotoFont),
+              buildLabelValueRow(
+                  'Fecha creación:', cita.fechaCreacion, robotoFont),
             ],
           ),
         ],
@@ -96,7 +107,8 @@ class PdfGenerator {
     return file;
   }
 
-  static pw.Widget buildLabelValueRow(String label, String value, pw.Font font, {PdfColor? color}) {
+  static pw.Widget buildLabelValueRow(String label, String value, pw.Font font,
+      {PdfColor? color}) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 2),
       child: pw.Row(
