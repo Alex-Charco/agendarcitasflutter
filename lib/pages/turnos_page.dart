@@ -17,6 +17,7 @@ class _TurnosPageState extends State<TurnosPage> {
   List<Turno> filteredTurnos = [];
   final TextEditingController filterController = TextEditingController();
   bool loading = true;
+  
 
   @override
   void initState() {
@@ -139,36 +140,33 @@ class _TurnosPageState extends State<TurnosPage> {
                                 alignment: Alignment.centerRight,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    final scaffoldContext =
-                                        context; // Guarda el contexto actual del Scaffold
+                                    // ignore: unused_local_variable
+                                    final scaffoldContext = context; // Guarda el contexto actual del Scaffold
 
                                     showDialog(
                                       context: context,
                                       builder: (_) => ModalRegistrarCita(
-                                        turno: turno,
-                                        onConfirm: () async {
-                                          await ApiService.registrarCita(
-                                              context, turno.idTurno);
+                                          turno: turno,
+                                          onConfirm: () async {
+                                            await ApiService.registrarCita(
+                                                context, turno.idTurno);
 
-                                          Navigator.pop(
-                                              // ignore: use_build_context_synchronously
-                                              context); // Cierra el modal
+                                            // Usa Navigator.of(context, rootNavigator: true) para cerrar el modal
+                                            // ignore: use_build_context_synchronously
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
 
-                                          // Espera un micro-tick antes de usar el contexto del Scaffold
-                                          Future.delayed(
-                                              const Duration(milliseconds: 100),
-                                              () {
-                                            showSuccessDialog(
-                                              // ignore: use_build_context_synchronously
-                                              scaffoldContext, // Usa el contexto padre válido
-                                              'Éxito',
-                                              'Cita registrada con éxito',
-                                            );
-                                          });
-
-                                          fetchTurnos(); // Actualiza lista
-                                        },
-                                      ),
+                                            if (mounted) {
+                                              showSuccessDialog(
+                                                // ignore: use_build_context_synchronously
+                                                scaffoldContext, // NO el del modal
+                                                'Éxito',
+                                                'Cita registrada con éxito',
+                                                onConfirm: () => fetchTurnos(),
+                                              );
+                                            }
+                                          }),
                                     );
                                   },
                                   child: const Text('Registrar Cita'),
